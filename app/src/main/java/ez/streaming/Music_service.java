@@ -17,7 +17,8 @@ import java.io.IOException;
 public class Music_service extends Service implements MediaPlayer.OnErrorListener {
 
     public MediaPlayer mediaPlayer = new MediaPlayer();
-    String url = "rtsp://iptv.cybertap.com.ar:1935/fmvida/fmvida.stream";//"http://72.13.93.91:80";
+    //String url = "rtsp://iptv.cybertap.com.ar:1935/fmvida/fmvida.stream";//"http://72.13.93.91:80";
+    String url = "http://72.13.93.91:80";
 
     private static final String ACTION_PLAY = "com.example.action.PLAY";
 
@@ -126,7 +127,7 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
 
     public boolean setVolume(int progress) {
         Log.i("MyActivity", "Increase vol");
-        mediaPlayer.setVolume(progress, progress);
+        mediaPlayer.setVolume(100, 100);
         return true;
     }
 }

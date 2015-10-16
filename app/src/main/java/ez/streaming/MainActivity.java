@@ -19,6 +19,8 @@ public class MainActivity extends AppCompatActivity {
 
     boolean mBounded;
     Music_service musicService = null;
+    private SeekBar volumeControl = null;
+    private AudioManager audioManager = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,13 +41,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        AudioManager audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+        audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
         int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
         int curVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        SeekBar volControl = (SeekBar)findViewById(R.id.volBar);
-        volControl.setMax(maxVolume);
-        volControl.setProgress(curVolume);
-        volControl.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        volumeControl = (SeekBar)findViewById(R.id.volBar);
+        volumeControl.setMax(maxVolume);
+        volumeControl.setProgress(curVolume);
+        volumeControl.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onStopTrackingTouch(SeekBar arg0) {
             }
@@ -56,13 +58,9 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onProgressChanged(SeekBar arg0, int progress, boolean arg2) {
-                //audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, progress, 0);
                 Log.i("MyActivity", "Progress " + progress);
-                //Intent intent = getIntent();
-                //intent.getExtras().toString();
-                //(Music_service)intent.onVolumeChanged(progress);
-                //Music_service.mediaPlayer.setVolume(progress, progress);
                 musicService.setVolume(progress);
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, progress, 0);
             }
         });
     }

@@ -80,7 +80,7 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
         PendingIntent resultPendingIntent = PendingIntent.getActivity(this,0,notificationIntent,PendingIntent.FLAG_UPDATE_CURRENT);
 
         mBuilder.setContentIntent(resultPendingIntent);
-;
+
         int mId = 1;
         // mId allows you to update the notification later on.
         startForeground(mId, mBuilder.build());
@@ -93,13 +93,13 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
              Log.i("MyActivity", "error en el setdatasrouce " + e.getMessage() + e.getLocalizedMessage());
         }
         mediaPlayer.prepareAsync(); // prepare async to not block main thread
-        Toast.makeText(getApplicationContext(), "preparando...", Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "Conectando...", Toast.LENGTH_LONG).show();
         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mediaPlayer) {
-                Log.i("MyActivity", "Por start ");
+                Log.i("MyActivity", "Por start");
                 mediaPlayer.start();
-                Toast.makeText(getApplicationContext(), "service starting", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Conectado", Toast.LENGTH_SHORT).show();
             }
             });
         return Service.START_NOT_STICKY;
@@ -111,6 +111,6 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
         Log.i("MyActivity", "Service On destroy ");
         mediaPlayer.release();
         mediaPlayer = null;
-        Toast.makeText(getApplicationContext(), "service stopping", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "Pausado", Toast.LENGTH_SHORT).show();
     }
 }

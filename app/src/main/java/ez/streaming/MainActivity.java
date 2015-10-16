@@ -33,8 +33,10 @@ public class MainActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     startService(new Intent(getApplicationContext(), Music_service.class));
+                    volumeControl.setEnabled(true);
                 } else {
                     stopService(new Intent(getApplicationContext(), Music_service.class));
+                    volumeControl.setEnabled(false);
                 }
             }
         });
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         volumeControl = (SeekBar)findViewById(R.id.volBar);
         volumeControl.setMax(maxVolume);
         volumeControl.setProgress(curVolume);
+        volumeControl.setEnabled(false);
         volumeControl.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onStopTrackingTouch(SeekBar arg0) {

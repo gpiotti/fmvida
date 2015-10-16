@@ -33,6 +33,7 @@
         android:id="@+id/volBar"
         android:minWidth="200dp"
         android:minHeight="50dp"
+        android:enabled="false"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 

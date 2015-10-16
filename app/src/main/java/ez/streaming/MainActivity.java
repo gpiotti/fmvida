@@ -31,13 +31,11 @@ public class MainActivity extends AppCompatActivity {
         ToggleButton toggle = (ToggleButton) findViewById(R.id.togglebutton);
         toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Intent mIntent = new Intent(getApplicationContext(), Music_service.class);
                 if (isChecked) {
-                    startService(mIntent);
+                    startService(new Intent(getApplicationContext(), Music_service.class));
                 } else {
-                    stopService(mIntent);
+                    stopService(new Intent(getApplicationContext(), Music_service.class));
                 }
-                bindService(mIntent, mConnection, BIND_AUTO_CREATE);
             }
         });
 
@@ -59,27 +57,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar arg0, int progress, boolean arg2) {
                 Log.i("MyActivity", "Progress " + progress);
-                musicService.setVolume(progress);
                 audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, progress, 0);
             }
         });
     }
-
-    ServiceConnection mConnection = new ServiceConnection() {
-
-        public void onServiceDisconnected(ComponentName name) {
-            Log.i("MyActivity", "Service is disconnected");
-            mBounded = false;
-            musicService = null;
-        }
-
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            Log.i("MyActivity", "Service is connected");
-            mBounded = true;
-            Music_service.LocalBinder mLocalBinder = (Music_service.LocalBinder)service;
-            musicService = mLocalBinder.getServerInstance();
-        }
-    };
 
     @Override
     protected void onStop() {
@@ -93,7 +74,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();  // Always call the superclass method first
         Log.i("MyActivity", "Activity On Destroy ");
-
     }
 }
 

@@ -22,25 +22,16 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
 
     private static final String ACTION_PLAY = "com.example.action.PLAY";
 
-    IBinder mBinder = new LocalBinder();
-
     @Override
     public IBinder onBind(Intent arg0) {
         // TODO Auto-generated method stub
         Log.i("MyActivity", "Service Bind ");
-        return mBinder;
-    }
-
-    public class LocalBinder extends Binder {
-        public Music_service getServerInstance() {
-            return Music_service.this;
-        }
+        return null;
     }
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
         // ... react appropriately ...
-
         Log.i("MyActivity", "Service On Error ");
         mediaPlayer.reset();
         return true;
@@ -117,17 +108,9 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
     @Override
     public void onDestroy() {
         super.onDestroy();
-
         Log.i("MyActivity", "Service On destroy ");
         mediaPlayer.release();
         mediaPlayer = null;
         Toast.makeText(getApplicationContext(), "service stopping", Toast.LENGTH_SHORT).show();
-
-    }
-
-    public boolean setVolume(int progress) {
-        Log.i("MyActivity", "Increase vol");
-        mediaPlayer.setVolume(100, 100);
-        return true;
     }
 }

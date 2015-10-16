@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">Streaming</string>
-
-
     <string name="action_settings">Settings</string>
     <string name="title">FM Vida 103.5</string>
 </resources>

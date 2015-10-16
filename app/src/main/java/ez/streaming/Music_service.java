@@ -5,6 +5,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.Binder;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -15,19 +16,27 @@ import java.io.IOException;
 
 public class Music_service extends Service implements MediaPlayer.OnErrorListener {
 
-    MediaPlayer mediaPlayer = new MediaPlayer();
-    String url = "http://72.13.93.91:80";
+    public MediaPlayer mediaPlayer = new MediaPlayer();
+    String url = "rtsp://iptv.cybertap.com.ar:1935/fmvida/fmvida.stream";//"http://72.13.93.91:80";
 
     private static final String ACTION_PLAY = "com.example.action.PLAY";
+
+    IBinder mBinder = new LocalBinder();
 
     @Override
     public IBinder onBind(Intent arg0) {
         // TODO Auto-generated method stub
         Log.i("MyActivity", "Service Bind ");
-        return null;
+        return mBinder;
     }
 
-      @Override
+    public class LocalBinder extends Binder {
+        public Music_service getServerInstance() {
+            return Music_service.this;
+        }
+    }
+
+    @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
         // ... react appropriately ...
 
@@ -35,9 +44,6 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
         mediaPlayer.reset();
         return true;
     }
-
-
-
 
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i("MyActivity", "Service onStartCommand ");
@@ -64,7 +70,6 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
                 startForeground(1, builder.build());
                 */
 
-
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(android.R.drawable.ic_media_play)
@@ -88,8 +93,6 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
         // mId allows you to update the notification later on.
         startForeground(mId, mBuilder.build());
 
-
-
         mediaPlayer.reset();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         try {
@@ -107,8 +110,6 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
                 Toast.makeText(getApplicationContext(), "service starting", Toast.LENGTH_SHORT).show();
             }
             });
-
-
         return Service.START_NOT_STICKY;
     }
 
@@ -123,7 +124,9 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
 
     }
 
-
-
-
+    public boolean setVolume(int progress) {
+        Log.i("MyActivity", "Increase vol");
+        mediaPlayer.setVolume(progress, progress);
+        return true;
+    }
 }

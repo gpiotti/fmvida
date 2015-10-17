@@ -15,7 +15,7 @@ import java.io.IOException;
 
 public class Music_service extends Service implements MediaPlayer.OnErrorListener {
 
-    public MediaPlayer mediaPlayer = new MediaPlayer();
+    static public MediaPlayer mediaPlayer = new MediaPlayer();
     String url = "rtsp://iptv.cybertap.com.ar:1935/fmvida/fmvida.stream";
     //String url = "http://72.13.93.91:80";
 
@@ -39,27 +39,6 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i("MyActivity", "Service onStartCommand ");
 
-        /*
-        // Se construye la notificación
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .setSmallIcon(android.R.drawable.stat_sys_download_done)
-                .setContentTitle("Servicio en segundo plano")
-                .setContentText("Procesando...");
-
-        // Crear Intent para iniciar una actividad al presionar la notificación
-                Intent notificationIntent = new Intent(this, MainActivity.class);
-
-
-                //creo que aca esta la papa ****************************************************************************
-                notificationIntent.setFlags( Intent.FLAG_ACTIVITY_REORDER_TO_FRONT );
-
-
-                PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-                builder.setContentIntent(pendingIntent);
-
-        // Poner en primer plano
-                startForeground(1, builder.build());
-                */
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)

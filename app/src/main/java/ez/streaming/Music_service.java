@@ -14,12 +14,13 @@ import android.widget.Toast;
 import java.io.IOException;
 
 public class Music_service extends Service implements MediaPlayer.OnErrorListener {
+    private MediaPlayer mediaPlayer;
 
-    static public MediaPlayer mediaPlayer = new MediaPlayer();
+
     String url = "rtsp://iptv.cybertap.com.ar:1935/fmvida/fmvida.stream";
     //String url = "http://72.13.93.91:80";
 
-    private static final String ACTION_PLAY = "com.example.action.PLAY";
+
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -28,16 +29,10 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
         return null;
     }
 
-    @Override
-    public boolean onError(MediaPlayer mp, int what, int extra) {
-        // ... react appropriately ...
-        Log.i("MyActivity", "Service On Error ");
-        mediaPlayer.reset();
-        return true;
-    }
 
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i("MyActivity", "Service onStartCommand ");
+
 
 
         NotificationCompat.Builder mBuilder =
@@ -63,24 +58,89 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
         // mId allows you to update the notification later on.
         startForeground(mId, mBuilder.build());
 
-        mediaPlayer.reset();
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        try {
-             mediaPlayer.setDataSource(url);
-        } catch (IOException e) {
-             Log.i("MyActivity", "error en el setdatasrouce " + e.getMessage() + e.getLocalizedMessage());
+
+
+        if (intent.getAction().equals(MainActivity.START_SERVICE)) {
+            initMediaPlayer(intent.getFloatExtra("vol",10f));
+            Log.i("MyActivity", "Iniciando mediaPlayer");
         }
+        else if(intent.getAction().equals(MainActivity.ACTION_RESUME)){
+            Log.i("MyActivity", "resumiendo mediaPlayer");
+            mediaPlayer.start();
+        }
+        else if(intent.getAction().equals((MainActivity.MUTE))){
+
+            mediaPlayer.setVolume(0f,0f);
+        }
+        else if(intent.getAction().equals((MainActivity.UNMUTE))){
+
+            mediaPlayer.setVolume(intent.getFloatExtra("lastVolume",10f),intent.getFloatExtra("lastVolume",10f));
+        }
+        else if(intent.getAction().equals((MainActivity.VOLUME_CHANGE))){
+
+            mediaPlayer.setVolume(intent.getFloatExtra("vol",10f),intent.getFloatExtra("vol",10f));
+        }
+        else if(intent.getAction().equals((MainActivity.ACTION_PAUSE))){
+
+            mediaPlayer.pause();
+            Log.i("MyActivity", "MediaPlayer Pausado " + mediaPlayer.isPlaying());
+        }
+
+
+
+
+
+
+        return Service.START_NOT_STICKY;
+    }
+
+
+   public void initMediaPlayer(final Float init_volume) {
+        Log.i("MyActivity", "Init Player ");
+       this.mediaPlayer = new MediaPlayer();
+
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
+        try {
+            mediaPlayer.setDataSource(url);
+        } catch (IOException e) {
+            Log.i("MyActivity", "error en el setdatasrouce " + e.getMessage() + e.getLocalizedMessage());
+        }
+
         mediaPlayer.prepareAsync(); // prepare async to not block main thread
         Toast.makeText(getApplicationContext(), "Conectando...", Toast.LENGTH_LONG).show();
+
         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mediaPlayer) {
+            @Override
+            public void onPrepared(MediaPlayer mediaPlayer) {
                 Log.i("MyActivity", "Por start");
+                mediaPlayer.setVolume(init_volume,init_volume);
                 mediaPlayer.start();
                 Toast.makeText(getApplicationContext(), "Conectado", Toast.LENGTH_SHORT).show();
             }
-            });
-        return Service.START_NOT_STICKY;
+        });
+
+        mediaPlayer.setOnErrorListener(this);
+
+        mediaPlayer.setOnInfoListener(new MediaPlayer.OnInfoListener() {
+            @Override
+            public boolean onInfo(MediaPlayer mediaPlayer, int what, int extra) {
+                Log.i("myActivity", "MediaPlayer.OnInfoListener: " + what + " Extra: " + extra);
+                return false;
+            }
+        });
+
+
+    }
+
+    @Override
+    public boolean onError(MediaPlayer mp, int what, int extra) {
+        // ... react appropriately ...
+        // The MediaPlayer has moved to the Error state, must be reset!
+        Log.i("MyApplication", "Error: " + what + " Extra: " + extra);
+        mediaPlayer.reset();
+        return false;
+
     }
 
     @Override
@@ -89,6 +149,6 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
         Log.i("MyActivity", "Service On destroy ");
         mediaPlayer.release();
         mediaPlayer = null;
-        Toast.makeText(getApplicationContext(), "Pausado", Toast.LENGTH_SHORT).show();
+
     }
 }

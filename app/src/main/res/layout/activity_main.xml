@@ -10,32 +10,40 @@
         android:layout_weight="1"
         android:orientation="horizontal"
         android:background="#ef4b4d"
+        android:minHeight="20dp"
         >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/title"
 
-        <TextView
-            android:id="@+id/title"
-            android:text="@string/title"
-            android:layout_height="match_parent"
-            android:textColor="#000000"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:textSize="20sp"
-            android:paddingTop="16dp"
-            android:paddingBottom="8dp"
-            android:paddingLeft="16dp"
+                android:textColor="#000000"
+                android:layout_centerVertical="true"
 
-            />
 
-        <ImageButton
-            android:id="@+id/power"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_settings_power_black_36dp"
-            android:background="@null"
-            android:paddingTop="16dp"
-            android:paddingRight="16dp"
+                android:textSize="20sp"
 
-            />
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:paddingLeft="16dp"
+
+                />
+
+            <ImageButton
+                android:id="@+id/power"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_settings_power_black_36dp"
+                android:background="@null"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:paddingRight="16dp"
+                />
+        </RelativeLayout>
 
     </LinearLayout>
 
@@ -83,7 +91,7 @@
 
         <TextView
             android:id="@+id/programa"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Estas escuchando ............. Nombre del Programa"
             android:textSize="20sp"

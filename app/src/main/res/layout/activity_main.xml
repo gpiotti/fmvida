@@ -1,8 +1,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:orientation="vertical"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,12 +24,12 @@
                 android:text="@string/title"
 
                 android:textColor="#000000"
-                android:layout_centerVertical="true"
+
 
 
                 android:textSize="20sp"
 
-                android:paddingTop="8dp"
+                android:paddingTop="16dp"
                 android:paddingBottom="8dp"
                 android:paddingLeft="16dp"
 
@@ -40,7 +42,8 @@
                 android:src="@drawable/ic_settings_power_black_36dp"
                 android:background="@null"
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
+                android:paddingTop="16dp"
+
                 android:paddingRight="16dp"
                 />
         </RelativeLayout>
@@ -58,13 +61,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:paddingBottom="48dp"
-
-
+                android:paddingRight="16dp"
                 android:id="@+id/logo"
                 android:src="@drawable/logo"
                 android:background="@android:color/black"
-
                 />
+
             <ImageButton
                 android:id="@+id/mPlayPauseButton"
                 android:layout_width="wrap_content"
@@ -73,10 +75,76 @@
                 android:background="@null"
                 android:layout_centerHorizontal="true"
                 android:layout_alignParentBottom="true"
+                android:paddingBottom="8dp"
+                />
 
+            <ImageButton
+            android:id="@+id/reconnecting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_autorenew_white_48dp"
+            android:background="@null"
+            android:visibility="invisible"
+            android:layout_alignParentRight="true"
+            android:paddingRight="16dp"
+            android:paddingBottom="8dp"
+
+            />
+
+
+
+            <ImageButton
+                android:id="@+id/facebook"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/facebook"
+                android:background="@null"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:paddingRight="16dp"
                 android:paddingBottom="8dp"
 
                 />
+
+            <ImageButton
+                android:id="@+id/twitter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/twitter"
+                android:background="@null"
+                android:layout_above="@+id/facebook"
+                android:layout_alignParentRight="true"
+                android:paddingRight="16dp"
+                android:paddingBottom="8dp"
+
+                />
+
+            <ImageButton
+                android:id="@+id/instagram"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/instagram"
+                android:background="@null"
+                android:layout_above="@+id/twitter"
+                android:layout_alignParentRight="true"
+                android:paddingRight="16dp"
+                android:paddingBottom="8dp"
+
+                />
+
+            <ImageButton
+                android:id="@+id/google"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/google"
+                android:background="@null"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:paddingRight="16dp"
+                android:paddingBottom="8dp"
+                android:visibility="invisible"
+                />
+
         </RelativeLayout>
 
     </LinearLayout>

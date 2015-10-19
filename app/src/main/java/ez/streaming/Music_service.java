@@ -2,9 +2,16 @@ package ez.streaming;
 
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -12,9 +19,16 @@ import android.widget.Toast;
 
 
 import java.io.IOException;
+import java.util.logging.Handler;
 
 public class Music_service extends Service implements MediaPlayer.OnErrorListener {
+
     private MediaPlayer mediaPlayer;
+    private boolean reconnect = false;
+
+
+
+
 
 
     String url = "rtsp://iptv.cybertap.com.ar:1935/fmvida/fmvida.stream";
@@ -30,8 +44,18 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
     }
 
 
+
+    private BroadcastReceiver mConnReceiver = new BroadcastReceiver() {
+
+        public void onReceive(Context context, Intent intent) {
+            handleConnectivity(intent);
+
+        }
+    };
+
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i("MyActivity", "Service onStartCommand ");
+
 
 
 
@@ -61,44 +85,64 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
 
 
         if (intent.getAction().equals(MainActivity.START_SERVICE)) {
-            initMediaPlayer(intent.getFloatExtra("vol",10f));
+            initMediaPlayer(intent.getFloatExtra("vol", 10f));
             Log.i("MyActivity", "Iniciando mediaPlayer");
+
+            registerReceiver(mConnReceiver,
+                    new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+            reconnect = true;
+
         }
         else if(intent.getAction().equals(MainActivity.ACTION_RESUME)){
             Log.i("MyActivity", "resumiendo mediaPlayer");
             mediaPlayer.start();
+
         }
         else if(intent.getAction().equals((MainActivity.MUTE))){
 
             mediaPlayer.setVolume(0f,0f);
+
         }
         else if(intent.getAction().equals((MainActivity.UNMUTE))){
 
             mediaPlayer.setVolume(intent.getFloatExtra("lastVolume",10f),intent.getFloatExtra("lastVolume",10f));
+
         }
         else if(intent.getAction().equals((MainActivity.VOLUME_CHANGE))){
+
 
             mediaPlayer.setVolume(intent.getFloatExtra("vol",10f),intent.getFloatExtra("vol",10f));
         }
         else if(intent.getAction().equals((MainActivity.ACTION_PAUSE))){
-
+            reconnect=false;
             mediaPlayer.pause();
             Log.i("MyActivity", "MediaPlayer Pausado " + mediaPlayer.isPlaying());
         }
-
-
-
-
 
 
         return Service.START_NOT_STICKY;
     }
 
 
+    private void handleConnectivity(Intent intent) {
+        final ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        final NetworkInfo netInfo = cm.getActiveNetworkInfo();
+
+        if(netInfo != null && netInfo.isConnected()) {
+            Log.i("MyActivity", "esta conectado " + intent.getStringExtra("extraInfo") + " mas datos: " + intent.getParcelableExtra("otherNetwork"))  ;
+            if (reconnect) {
+                mediaPlayer.reset();
+                initMediaPlayer(15f);
+
+            }
+        } else {
+            Log.i("MyActivity", "esta desconectado " + intent.getStringExtra("extraInfo"))  ;
+        }
+    }
+
    public void initMediaPlayer(final Float init_volume) {
         Log.i("MyActivity", "Init Player ");
-       this.mediaPlayer = new MediaPlayer();
-
+        this.mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
         try {
@@ -106,16 +150,18 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
         } catch (IOException e) {
             Log.i("MyActivity", "error en el setdatasrouce " + e.getMessage() + e.getLocalizedMessage());
         }
-
-        mediaPlayer.prepareAsync(); // prepare async to not block main thread
+        mediaPlayer.prepareAsync();
         Toast.makeText(getApplicationContext(), "Conectando...", Toast.LENGTH_LONG).show();
 
         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mediaPlayer) {
-                Log.i("MyActivity", "Por start");
-                mediaPlayer.setVolume(init_volume,init_volume);
-                mediaPlayer.start();
+
+                mediaPlayer.setVolume(init_volume, init_volume);
+                if (reconnect) {
+                    Log.i("MyActivity", "Por start");
+                    mediaPlayer.start();
+                }
                 Toast.makeText(getApplicationContext(), "Conectado", Toast.LENGTH_SHORT).show();
             }
         });
@@ -139,6 +185,19 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
         // The MediaPlayer has moved to the Error state, must be reset!
         Log.i("MyApplication", "Error: " + what + " Extra: " + extra);
         mediaPlayer.reset();
+
+        if (what == 100 || what == -110) {
+            new CountDownTimer(30000, 1000) {
+
+                public void onTick(long millisUntilFinished) {
+                }
+
+                public void onFinish() {
+                    initMediaPlayer(10f);
+                }
+            }.start();
+        }
+
         return false;
 
     }
@@ -147,8 +206,10 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
     public void onDestroy() {
         super.onDestroy();
         Log.i("MyActivity", "Service On destroy ");
+        unregisterReceiver(mConnReceiver);
         mediaPlayer.release();
         mediaPlayer = null;
+
 
     }
 }

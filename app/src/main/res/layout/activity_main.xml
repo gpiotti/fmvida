@@ -68,7 +68,7 @@
                 />
 
             <ImageButton
-                android:id="@+id/mPlayPauseButton"
+                android:id="@+id/playStopButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_play_circle_outline_white_48dp"
@@ -190,9 +190,9 @@
 
 
             <SeekBar
+                android:id="@+id/volBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/volBar"
                 android:enabled="false"
                 android:paddingLeft="32dp"
                 android:paddingRight="32dp"

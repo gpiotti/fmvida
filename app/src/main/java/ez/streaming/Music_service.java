@@ -21,7 +21,7 @@ import java.io.IOException;
 
 public class Music_service extends Service implements MediaPlayer.OnErrorListener {
 
-    private MediaPlayer mediaPlayer;
+    private  MediaPlayer mediaPlayer;
     private boolean auto_reconnect = false;
 
     String url = "rtsp://iptv.cybertap.com.ar:1935/fmvida/fmvida.stream";
@@ -31,7 +31,7 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
     @Override
     public IBinder onBind(Intent arg0) {
         // TODO Auto-generated method stub
-        Log.i("MyActivity", "Service Bind ");
+        Log.i("Service", "Service Bind ");
         return null;
     }
 
@@ -45,7 +45,7 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
     };
 
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.i("MyActivity", "Service onStartCommand ");
+        Log.i("Service", "Service onStartCommand ");
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
@@ -72,22 +72,33 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
 
 
 
-        if (intent.getAction().equals(MainActivity.START_SERVICE)) {
+        if (intent.getAction().equals(MainActivity.ACTION_START)) {
             initMediaPlayer(intent.getFloatExtra("vol", 10f));
-            Log.i("MyActivity", "Iniciando mediaPlayer");
-
-            registerReceiver(mConnReceiver,
-                    new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+            Log.i("Service", "Iniciando mediaPlayer");
             auto_reconnect = true;
 
+            IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction("android.net.wifi.WIFI_STATE_CHANGED");
+            intentFilter.addAction("android.net.wifi.CONNECTIVITY_ACTION");
+            intentFilter.addAction("android.net.wifi.STATE_CHANGE");
+
+
+            registerReceiver(mConnReceiver,
+                    new IntentFilter(intentFilter));
 
 
         }
-        else if(intent.getAction().equals(MainActivity.ACTION_RESUME)){
-            Log.i("MyActivity", "resumiendo mediaPlayer");
-            mediaPlayer.start();
+        else if(intent.getAction().equals((MainActivity.ACTION_STOP))){
+            auto_reconnect=false;
+            sendToActivity(MainActivity.STATUS_STOP);
+            mediaPlayer.stop();
 
+            stopSelf();
+
+
+            Log.i("Service", "MediaPlayer stop " + mediaPlayer.isPlaying());
         }
+
         else if(intent.getAction().equals((MainActivity.MUTE))){
 
             mediaPlayer.setVolume(0f,0f);
@@ -103,11 +114,7 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
 
             mediaPlayer.setVolume(intent.getFloatExtra("vol",10f),intent.getFloatExtra("vol",10f));
         }
-        else if(intent.getAction().equals((MainActivity.ACTION_PAUSE))){
-            auto_reconnect=false;
-            mediaPlayer.pause();
-            Log.i("MyActivity", "MediaPlayer Pausado " + mediaPlayer.isPlaying());
-        }
+
 
 
         return Service.START_NOT_STICKY;
@@ -119,17 +126,27 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
         final ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         final NetworkInfo netInfo = cm.getActiveNetworkInfo();
 
-        if(netInfo != null && netInfo.isConnected()) {
-            Log.i("MyActivity", "esta conectado " + intent.getStringExtra("extraInfo") + " mas datos: " + intent.getParcelableExtra("otherNetwork"))  ;
+        if (netInfo != null && netInfo.isConnected() && netInfo.isConnectedOrConnecting()) {
+            Log.i("Service", "esta conectado " + intent.getStringExtra("extraInfo") + " mas datos: " + intent.getParcelableExtra("otherNetwork"));
             if (auto_reconnect) {
 
                 mediaPlayer.reset();
                 initMediaPlayer(15f);
 
             }
-        } else {
-            Log.i("MyActivity", "esta desconectado " + intent.getStringExtra("extraInfo"))  ;
+
+
+        } else if (netInfo != null && !netInfo.isConnected() && !netInfo.isConnectedOrConnecting()) {
+            Log.i("Service", "esta desconectado " + intent.getStringExtra("extraInfo"));
         }
+
+     else if(netInfo != null && !netInfo.isConnected() && netInfo.isConnectedOrConnecting()){
+        Log.i("Service", "esta conectando " + intent.getStringExtra("extraInfo"))  ;
+    }
+        else  if(netInfo != null){
+            Log.i("Service", "otro estado  " + intent.getStringExtra("extraInfo") + netInfo.isConnected() + netInfo.isConnectedOrConnecting())  ;
+        }
+
     }
 
     private void sendToActivity(String command) {
@@ -139,14 +156,14 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
     }
 
    public void initMediaPlayer(final Float init_volume) {
-        Log.i("MyActivity", "Init Player ");
+        Log.i("Service", "Init Player ");
        sendToActivity(MainActivity.STATUS_CONNECTING);
         this.mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         try {
             mediaPlayer.setDataSource(url);
         } catch (IOException e) {
-            Log.i("MyActivity", "error en el setdatasrouce " + e.getMessage() + e.getLocalizedMessage());
+            Log.i("Service", "error en el setdatasrouce " + e.getMessage() + e.getLocalizedMessage());
         }
         mediaPlayer.prepareAsync();
         Toast.makeText(getApplicationContext(), "Conectando...", Toast.LENGTH_LONG).show();
@@ -155,7 +172,7 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
             public void onPrepared(MediaPlayer mediaPlayer) {
                 mediaPlayer.setVolume(init_volume, init_volume);
                 if (auto_reconnect) {
-                    Log.i("MyActivity", "Por start");
+                    Log.i("Service", "Por start");
                     mediaPlayer.start();
                     sendToActivity(MainActivity.STATUS_PLAYING);
                 }
@@ -166,7 +183,7 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
         mediaPlayer.setOnInfoListener(new MediaPlayer.OnInfoListener() {
             @Override
             public boolean onInfo(MediaPlayer mediaPlayer, int what, int extra) {
-                Log.i("myActivity", "MediaPlayer.OnInfoListener: " + what + " Extra: " + extra);
+                Log.i("Service", "MediaPlayer.OnInfoListener: " + what + " Extra: " + extra);
                 return false;
             }
         });
@@ -176,7 +193,7 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
     public boolean onError(MediaPlayer mp, int what, int extra) {
         // ... react appropriately ...
         // The MediaPlayer has moved to the Error state, must be reset!
-        Log.i("MyApplication", "Error: " + what + " Extra: " + extra);
+        Log.i("Service", "Error: " + what + " Extra: " + extra);
         mediaPlayer.reset();
         if (what == 100 || what == -110) {
             new CountDownTimer(30000, 1000) {
@@ -193,7 +210,7 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.i("MyActivity", "Service On destroy ");
+        Log.i("Service", "Service On destroy ");
         unregisterReceiver(mConnReceiver);
         mediaPlayer.release();
         mediaPlayer = null;

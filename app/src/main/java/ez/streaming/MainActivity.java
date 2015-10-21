@@ -28,20 +28,19 @@ public class MainActivity extends AppCompatActivity {
     ImageButton reconectButton;
     ImageButton powerButton;
     ImageButton muteButton;
-    ImageButton mPlayPauseButton;
+    ImageButton playStopButton;
     SeekBar volumeControl;
     TextView marquesina;
     Animation reconnectBlink;
 
-    public static final String STATUS_INIT = "ez.streaming.action.STATUS_INIT";
+
     public static final String STATUS_PLAYING = "ez.streaming.action.STATUS_PLAYING";
-    public static final String STATUS_PAUSE = "ez.streaming.action.STATUS_PAUSE";
+    public static final String STATUS_STOP = "ez.streaming.action.STATUS_STOP";
     public static final String STATUS_CONNECTING = "ez.streaming.action.STATUS_CONNECTING";
 
 
-    public static final String START_SERVICE = "ez.streaming.action.START_SERVICE";
-    public static final String ACTION_RESUME = "ez.streaming.action.ACTION_RESUME";
-    public static final String ACTION_PAUSE = "ez.streaming.action.ACTION_PAUSE";
+    public static final String ACTION_START = "ez.streaming.action.ACTION_START";
+    public static final String ACTION_STOP = "ez.streaming.action.ACTION_STOP";
 
 
     public static final String VOLUME_CHANGE = "ez.streaming.action.VOLUME_CHANGE";
@@ -52,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    String player_status = STATUS_INIT;
+    private String player_status = STATUS_STOP;
     boolean muted = false;
 
 
@@ -80,44 +79,36 @@ public class MainActivity extends AppCompatActivity {
         muteButton.setEnabled(false);
         muteButton.setAlpha(64);
 
-        mPlayPauseButton = (ImageButton) findViewById(R.id.mPlayPauseButton);
+        playStopButton = (ImageButton) findViewById(R.id.playStopButton);
         volumeControl = (SeekBar) findViewById(R.id.volBar);
         marquesina = (TextView) findViewById(R.id.programa);
 
         marquesina.setSelected(true);
+        Log.i("my", "asd" + player_status);
 
 
-
-        mPlayPauseButton.setOnClickListener(new View.OnClickListener() {
+        playStopButton.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
                 if (player_status == STATUS_PLAYING) {
+                    player_status = STATUS_STOP;
+                    //hacer esto con el callback de que esta reproduciendo posta
+                    //muteButton.setEnabled(false);
+                    //muteButton.setAlpha(64);
+                    //volumeControl.setEnabled(false);
+                    startService(new Intent(getApplicationContext(), Music_service.class).setAction(ACTION_STOP));
+                    playStopButton.setImageResource(R.drawable.ic_play_circle_outline_white_48dp);
 
-                    player_status = STATUS_PAUSE;
-                    volumeControl.setEnabled(false);
-                    startService(new Intent(getApplicationContext(), Music_service.class).setAction(ACTION_PAUSE));
-                    mPlayPauseButton.setImageResource(R.drawable.ic_play_circle_outline_white_48dp);
-                } else {
-                    muteButton.setEnabled(true);
-                    if (player_status == STATUS_INIT) {
-                        Log.i("MyActivity", "Llamndo servicio ");
-                        int maxVolume = 16;
-                        float log1 = (float) (Math.log(maxVolume - volumeControl.getProgress()) / Math.log(maxVolume));
-                        //Cuando inicia le madno vol de lo que esta en la progress bar
-                        startService(new Intent(getApplicationContext(), Music_service.class).setAction(START_SERVICE).putExtra("vol", 1 - log1));
+                } else if (player_status == STATUS_STOP) {
+                        muteButton.setEnabled(true);
+                        startService(new Intent(getApplicationContext(), Music_service.class).setAction(ACTION_START).putExtra("vol",calcularVolumen()));
+                        Log.i("my","asd");
                         volumeControl.setEnabled(true);
                         muteButton.setAlpha(255);
-                        mPlayPauseButton.setImageResource(R.drawable.ic_pause_circle_outline_white_48dp);
-                        player_status = STATUS_PLAYING;
-                    } else if (player_status == STATUS_PAUSE) {
-                        startService(new Intent(getApplicationContext(), Music_service.class).setAction(MainActivity.ACTION_RESUME));
-                        volumeControl.setEnabled(true);
-                        muteButton.setAlpha(255);
-                        mPlayPauseButton.setImageResource(R.drawable.ic_pause_circle_outline_white_48dp);
+                        playStopButton.setImageResource(R.drawable.ic_pause_circle_outline_white_48dp);
                         player_status = STATUS_PLAYING;
                     }
                 }
-            }
         });
 
         muteButton.setOnClickListener(new View.OnClickListener() {
@@ -129,9 +120,8 @@ public class MainActivity extends AppCompatActivity {
                     volumeControl.setEnabled(true);
                     Intent serviceIntent = new Intent(getApplicationContext(), Music_service.class);
                     serviceIntent.setAction(UNMUTE);
-                    int maxVolume = 16;
-                    float log1=(float)(Math.log(maxVolume-volumeControl.getProgress()) / Math.log(maxVolume));
-                    serviceIntent.putExtra("lastVolume", 1 - log1);
+
+                    serviceIntent.putExtra("lastVolume",calcularVolumen());
                     startService(serviceIntent);
                     muteButton.setImageResource(R.drawable.ic_volume_up_black_36dp);
                 } else {
@@ -177,16 +167,35 @@ public class MainActivity extends AppCompatActivity {
             );
     }
 
+    private Float calcularVolumen(){
+        int maxVolume = 16;
+        float log1 = (float) (Math.log(maxVolume - volumeControl.getProgress()) / Math.log(maxVolume));
+        return 1-log1;
+    }
     private void updateUI(String command){
         switch(command) {
             case  STATUS_CONNECTING:
                 reconectButton.setVisibility(View.VISIBLE);
                 reconectButton.startAnimation(reconnectBlink);
+                muteButton.setEnabled(false);
+                muteButton.setAlpha(64);
+                volumeControl.setEnabled(false);
 
                 break;
             case  STATUS_PLAYING:
                 reconectButton.clearAnimation();
                 reconectButton.setVisibility(View.INVISIBLE);
+                muteButton.setEnabled(true);
+                muteButton.setAlpha(255);
+                volumeControl.setEnabled(true);
+
+                break;
+            case STATUS_STOP:
+                reconectButton.clearAnimation();
+                reconectButton.setVisibility(View.INVISIBLE);
+                muteButton.setEnabled(false);
+                muteButton.setAlpha(64);
+                volumeControl.setEnabled(false);
                 break;
         }
     }
@@ -202,6 +211,9 @@ public class MainActivity extends AppCompatActivity {
                 case STATUS_PLAYING:   updateUI(STATUS_PLAYING);
                     Log.i("MyActivity", "STATUS_PLAYING ");
                 break;
+                case STATUS_STOP:   updateUI(STATUS_STOP);
+                    Log.i("MyActivity", "STATUS_STOP ");
+                    break;
             }
 
         }

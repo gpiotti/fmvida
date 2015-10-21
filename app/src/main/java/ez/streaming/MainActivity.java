@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
                     muteButton.setAlpha(255);
                     mPlayPauseButton.setImageResource(R.drawable.ic_pause_circle_outline_white_48dp);
                     player_status = STATUS_PLAYING;
-                    volumeControl.setEnabled(true);
+                    volumeControl.setEnabled(!muted);
                 }
             }
         });

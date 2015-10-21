@@ -119,32 +119,6 @@
 
                 />
 
-            <ImageButton
-                android:id="@+id/instagram"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/instagram"
-                android:background="@null"
-                android:layout_above="@+id/twitter"
-                android:layout_alignParentRight="true"
-                android:paddingRight="16dp"
-                android:paddingBottom="8dp"
-
-                />
-
-            <ImageButton
-                android:id="@+id/google"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/google"
-                android:background="@null"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:paddingRight="16dp"
-                android:paddingBottom="8dp"
-                android:visibility="invisible"
-                />
-
         </RelativeLayout>
 
     </LinearLayout>
@@ -196,7 +170,7 @@
                 android:enabled="false"
                 android:paddingLeft="32dp"
                 android:paddingRight="32dp"
-                />
+                android:minHeight="36dp" />
         </LinearLayout>
 
 

@@ -135,7 +135,7 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
     private void sendToActivity(String command) {
         Intent intent = new Intent("sendMessage");
         intent.putExtra("command", command);
-                LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
    public void initMediaPlayer(final Float init_volume) {

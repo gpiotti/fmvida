@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
     private String player_status = STATUS_STOP;
     boolean muted = false;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -68,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
         Log.i("MyActivity", "Activity On Create ");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         reconectButton = (ImageButton) findViewById(R.id.reconnecting);
         reconnectBlink = AnimationUtils.loadAnimation(this, R.anim.reconect_blink);
@@ -92,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
         marquesina = (TextView) findViewById(R.id.programa);
 
         marquesina.setSelected(true);
-
 
 
         if (savedInstanceState != null) {
@@ -138,7 +137,6 @@ public class MainActivity extends AppCompatActivity {
                         playStopButton.setImageResource(R.drawable.ic_stop_white_48dp);
                         player_status = STATUS_PLAYING;
                     }
-
                 }
             });
 
@@ -248,12 +246,15 @@ public class MainActivity extends AppCompatActivity {
                 muteButton.setEnabled(false);
                 muteButton.setAlpha(64);
                 volumeControl.setEnabled(false);
+
                 break;
             case STATUS_STOP:
                 reconectButton.clearAnimation();
                 reconectButton.setVisibility(View.INVISIBLE);
                 muteButton.setEnabled(false);
                 muteButton.setAlpha(64);
+                player_status = STATUS_STOP;
+                playStopButton.setImageResource(R.drawable.ic_play_arrow_white_48dp);
                 volumeControl.setEnabled(false);
                 break;
         }

@@ -19,7 +19,8 @@ import android.widget.Toast;
 import java.io.IOException;
 
 
-public class Music_service extends Service implements MediaPlayer.OnErrorListener {
+public class Music_service extends Service implements MediaPlayer.OnErrorListener, AudioManager.OnAudioFocusChangeListener {
+
 
     private  MediaPlayer mediaPlayer;
     private boolean auto_reconnect = false;
@@ -46,6 +47,14 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
 
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i("Service", "Service onStartCommand ");
+
+        AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        int result = audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
+                AudioManager.AUDIOFOCUS_GAIN);
+
+        if (result != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+            // could not get audio focus.
+        }
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
@@ -195,6 +204,49 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
                 return false;
             }
         });
+
+
+    }
+
+
+    public void onAudioFocusChange(int focusChange) {
+        switch (focusChange) {
+
+            case AudioManager.AUDIOFOCUS_GAIN:
+                Log.i("Service", "Audio Focus GAIN");
+                // resume playback
+                //if (mediaPlayer == null) initMediaPlayer(1.0f);
+                //else
+                if (mediaPlayer.isPlaying()) mediaPlayer.setVolume(0.6f,0.6f);
+
+                break;
+
+
+            case AudioManager.AUDIOFOCUS_LOSS:
+                Log.i("Service", "Audio Focus LOSS");
+                // Lost focus for an unbounded amount of time: stop playback and release media player
+                if (mediaPlayer.isPlaying()) mediaPlayer.stop();
+                sendToActivity(MainActivity.STATUS_STOP);
+                stopSelf();
+
+                break;
+
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+                Log.i("Service", "Audio Focus TRANSIENT");
+                // Lost focus for a short time, but we have to stop
+                // playback. We don't release the media player because playback
+                // is likely to resume
+                if (mediaPlayer.isPlaying()) mediaPlayer.pause();
+
+                break;
+
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                Log.i("Service", "Audio Focus Duck");
+                // Lost focus for a short time, but it's ok to keep playing
+                // at an attenuated level
+                if (mediaPlayer.isPlaying()) mediaPlayer.setVolume(0.1f, 0.1f);
+                break;
+        }
     }
 
     @Override

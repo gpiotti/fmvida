@@ -157,8 +157,10 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
     private void sendToActivity(String command) {
         Intent intent = new Intent("sendMessage");
         intent.putExtra("command", command);
+
                 LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
         Log.i("Service", "sended algo " + command );
+
     }
 
    public void initMediaPlayer(final Float init_volume) {
@@ -208,7 +210,7 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
                 public void onFinish() {
 
                     initMediaPlayer(10f);
-                    sendToActivity((MainActivity.SATUS_LOST_STREAM));
+                    sendToActivity((MainActivity.STATUS_LOST_STREAM));
                 }
             }.start();
         }

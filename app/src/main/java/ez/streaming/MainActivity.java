@@ -301,6 +301,7 @@ public class MainActivity extends AppCompatActivity {
 
     protected void onStop() {
         super.onStop();
+
         Log.i("MyActivity", "Activity On Stop ");
     }
     protected void onRestart() {
@@ -311,7 +312,8 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();  // Always call the superclass method first
         Log.i("MyActivity", "Activity On Destroy ");
 
-//        stopService(new Intent(getApplicationContext(), Music_service.class));
+        stopService(new Intent(getApplicationContext(), Music_service.class));
+        finish();
 
 
     }

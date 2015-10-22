@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         volumeControl.setEnabled(false);
         volumeControl.setMax(maxVolume);
         volumeControl.setProgress(curVolume);
-
+        Log.i("MyActivity", " " + volumeControl.isEnabled());
         marquesina = (TextView) findViewById(R.id.programa);
 
         marquesina.setSelected(true);
@@ -99,30 +99,24 @@ public class MainActivity extends AppCompatActivity {
             Log.i("MyActivity", "Activity On Saveed ");
             // Restore value of members from saved state
             player_status = savedInstanceState.getString("player_status");
-
-
+            muted = savedInstanceState.getBoolean("mute_button_state");
             if (player_status.equals(STATUS_PLAYING) || player_status.equals(STATUS_CONNECTING)){
                 player_status = STATUS_PLAYING;
                 volumeControl.setEnabled(true);
                 muteButton.setAlpha(255);
                 muteButton.setEnabled(true);
                 playStopButton.setImageResource(R.drawable.ic_stop_white_48dp);
-
-
-
-
             }
-            muted = savedInstanceState.getBoolean("mute_button_state");
             if (muted){
                 muteButton.setImageResource(R.drawable.ic_volume_off_black_36dp);
-
             }
             else{
                 muteButton.setImageResource(R.drawable.ic_volume_up_black_36dp);
-
             }
-
+            Log.i("MyActivity", " " + savedInstanceState.getBoolean("volume_bar_state"));
+            Log.i("MyActivity", " " + volumeControl.isEnabled());
             volumeControl.setEnabled(savedInstanceState.getBoolean("volume_bar_state"));
+            Log.i("MyActivity", " " + volumeControl.isEnabled());
         }
 
 
@@ -130,20 +124,17 @@ public class MainActivity extends AppCompatActivity {
 
             playStopButton.setOnClickListener(new View.OnClickListener() {
 
-            public void onClick(View v) {
-                if (player_status == STATUS_PLAYING) {
-                    player_status = STATUS_STOP;
-                    //hacer esto con el callback de que esta reproduciendo posta
-                    //muteButton.setEnabled(false);
-                    //muteButton.setAlpha(64);
-                    //volumeControl.setEnabled(false);
-                    startService(new Intent(getApplicationContext(), Music_service.class).setAction(ACTION_STOP));
-                    playStopButton.setImageResource(R.drawable.ic_play_arrow_white_48dp);
+                public void onClick(View v) {
+                    if (player_status == STATUS_PLAYING) {
+                        player_status = STATUS_STOP;
+                        startService(new Intent(getApplicationContext(), Music_service.class).setAction(ACTION_STOP));
+                        muteButton.setImageResource(R.drawable.ic_volume_up_black_36dp);
+                        playStopButton.setImageResource(R.drawable.ic_play_arrow_white_48dp);
 
-                } else if (player_status == STATUS_STOP) {
+                    } else if (player_status == STATUS_STOP) {
                         muteButton.setEnabled(true);
-                        startService(new Intent(getApplicationContext(), Music_service.class).setAction(ACTION_START).putExtra("vol",calcularVolumen()));
-                        Log.i("my","asd");
+                        startService(new Intent(getApplicationContext(), Music_service.class).setAction(ACTION_START).putExtra("vol", calcularVolumen()));
+                        Log.i("my", "asd");
                         volumeControl.setEnabled(true);
                         muteButton.setAlpha(255);
                         playStopButton.setImageResource(R.drawable.ic_stop_white_48dp);
@@ -152,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                 }
-        });
+            });
 
         muteButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -164,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
                     Intent serviceIntent = new Intent(getApplicationContext(), Music_service.class);
                     serviceIntent.setAction(UNMUTE);
 
-                    serviceIntent.putExtra("lastVolume",calcularVolumen());
+                    serviceIntent.putExtra("lastVolume", calcularVolumen());
                     startService(serviceIntent);
                     muteButton.setImageResource(R.drawable.ic_volume_up_black_36dp);
                 } else {
@@ -181,15 +172,12 @@ public class MainActivity extends AppCompatActivity {
         powerButton.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
-            stopService(new Intent(getApplicationContext(), Music_service.class));
-            finish();
+                stopService(new Intent(getApplicationContext(), Music_service.class));
+                finish();
             }
         });
 
 
-        volumeControl.setMax(maxVolume);
-        volumeControl.setProgress(curVolume);
-        volumeControl.setEnabled(false);
         volumeControl.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onStopTrackingTouch(SeekBar arg0) {
@@ -258,7 +246,7 @@ public class MainActivity extends AppCompatActivity {
                 volumeControl.setEnabled(true);
 
                 break;
-            case SATUS_LOST_STREAM:
+            case STATUS_LOST_STREAM:
                 reconectButton.setVisibility(View.VISIBLE);
                 reconectButton.startAnimation(reconnectBlink);
                 muteButton.setEnabled(false);

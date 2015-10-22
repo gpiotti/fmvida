@@ -71,7 +71,7 @@
                 android:id="@+id/playStopButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_play_circle_outline_white_48dp"
+                android:src="@drawable/ic_play_arrow_white_48dp"
                 android:background="@null"
                 android:layout_centerHorizontal="true"
                 android:layout_alignParentBottom="true"

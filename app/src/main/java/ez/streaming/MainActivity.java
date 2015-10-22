@@ -120,17 +120,15 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-
-
             playStopButton.setOnClickListener(new View.OnClickListener() {
 
                 public void onClick(View v) {
                     if (player_status == STATUS_PLAYING) {
                         player_status = STATUS_STOP;
                         startService(new Intent(getApplicationContext(), Music_service.class).setAction(ACTION_STOP));
+                        muted=false;
                         muteButton.setImageResource(R.drawable.ic_volume_up_black_36dp);
                         playStopButton.setImageResource(R.drawable.ic_play_arrow_white_48dp);
-
                     } else if (player_status == STATUS_STOP) {
                         muteButton.setEnabled(true);
                         startService(new Intent(getApplicationContext(), Music_service.class).setAction(ACTION_START).putExtra("vol", calcularVolumen()));
@@ -139,7 +137,6 @@ public class MainActivity extends AppCompatActivity {
                         muteButton.setAlpha(255);
                         playStopButton.setImageResource(R.drawable.ic_stop_white_48dp);
                         player_status = STATUS_PLAYING;
-
                     }
 
                 }
@@ -154,7 +151,6 @@ public class MainActivity extends AppCompatActivity {
                     volumeControl.setEnabled(true);
                     Intent serviceIntent = new Intent(getApplicationContext(), Music_service.class);
                     serviceIntent.setAction(UNMUTE);
-
                     serviceIntent.putExtra("lastVolume", calcularVolumen());
                     startService(serviceIntent);
                     muteButton.setImageResource(R.drawable.ic_volume_up_black_36dp);

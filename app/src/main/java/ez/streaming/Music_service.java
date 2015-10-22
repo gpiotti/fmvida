@@ -49,11 +49,15 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-                        .setSmallIcon(android.R.drawable.ic_media_play)
+                        .setSmallIcon(R.mipmap.ic_launcher)
+
                         .setContentTitle("Fm Vida 103.5")
                         .setContentText("Reproduciendo...");
+
+
         // Creates an explicit intent for an Activity in your app
         final Intent notificationIntent = new Intent(this, MainActivity.class);
+
         notificationIntent.setAction(Intent.ACTION_MAIN);
         notificationIntent.addCategory(Intent.CATEGORY_LAUNCHER);
         // The stack builder object will contain an artificial back stack for the
@@ -68,11 +72,12 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
 
         int mId = 1;
         // mId allows you to update the notification later on.
-        startForeground(mId, mBuilder.build());
+
 
 
 
         if (intent.getAction().equals(MainActivity.ACTION_START)) {
+            startForeground(mId, mBuilder.build());
             initMediaPlayer(intent.getFloatExtra("vol", 10f));
             Log.i("Service", "Iniciando mediaPlayer");
             auto_reconnect = true;
@@ -153,6 +158,7 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
         Intent intent = new Intent("sendMessage");
         intent.putExtra("command", command);
                 LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+        Log.i("Service", "sended algo " + command );
     }
 
    public void initMediaPlayer(final Float init_volume) {
@@ -200,7 +206,9 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
                 public void onTick(long millisUntilFinished) {
                 }
                 public void onFinish() {
+
                     initMediaPlayer(10f);
+                    sendToActivity((MainActivity.SATUS_LOST_STREAM));
                 }
             }.start();
         }

@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String STATUS_PLAYING = "ez.streaming.action.STATUS_PLAYING";
     public static final String STATUS_STOP = "ez.streaming.action.STATUS_STOP";
     public static final String STATUS_CONNECTING = "ez.streaming.action.STATUS_CONNECTING";
+    public static final String SATUS_LOST_STREAM = "ez.streaming.action.SATUS_LOST_STREAM";
 
 
     public static final String ACTION_START = "ez.streaming.action.ACTION_START";
@@ -65,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         reconectButton = (ImageButton) findViewById(R.id.reconnecting);
         reconnectBlink = AnimationUtils.loadAnimation(this, R.anim.reconect_blink);
 
@@ -81,13 +83,49 @@ public class MainActivity extends AppCompatActivity {
 
         playStopButton = (ImageButton) findViewById(R.id.playStopButton);
         volumeControl = (SeekBar) findViewById(R.id.volBar);
+        volumeControl.setEnabled(false);
+        volumeControl.setMax(maxVolume);
+        volumeControl.setProgress(curVolume);
+
         marquesina = (TextView) findViewById(R.id.programa);
 
         marquesina.setSelected(true);
-        Log.i("my", "asd" + player_status);
 
 
-        playStopButton.setOnClickListener(new View.OnClickListener() {
+        if (savedInstanceState != null) {
+            Log.i("MyActivity", "Activity On Saveed ");
+            // Restore value of members from saved state
+            player_status = savedInstanceState.getString("player_status");
+
+
+            if (player_status.equals(STATUS_PLAYING) || player_status.equals(STATUS_CONNECTING)){
+                player_status = STATUS_PLAYING;
+                volumeControl.setEnabled(true);
+                muteButton.setAlpha(255);
+                muteButton.setEnabled(true);
+                playStopButton.setImageResource(R.drawable.ic_stop_white_48dp);
+
+
+
+
+            }
+            muted = savedInstanceState.getBoolean("mute_button_state");
+            if (muted){
+                muteButton.setImageResource(R.drawable.ic_volume_off_black_36dp);
+
+            }
+            else{
+                muteButton.setImageResource(R.drawable.ic_volume_up_black_36dp);
+
+            }
+
+            volumeControl.setEnabled(savedInstanceState.getBoolean("volume_bar_state"));
+        }
+
+
+
+
+            playStopButton.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
                 if (player_status == STATUS_PLAYING) {
@@ -97,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
                     //muteButton.setAlpha(64);
                     //volumeControl.setEnabled(false);
                     startService(new Intent(getApplicationContext(), Music_service.class).setAction(ACTION_STOP));
-                    playStopButton.setImageResource(R.drawable.ic_play_circle_outline_white_48dp);
+                    playStopButton.setImageResource(R.drawable.ic_play_arrow_white_48dp);
 
                 } else if (player_status == STATUS_STOP) {
                         muteButton.setEnabled(true);
@@ -105,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
                         Log.i("my","asd");
                         volumeControl.setEnabled(true);
                         muteButton.setAlpha(255);
-                        playStopButton.setImageResource(R.drawable.ic_pause_circle_outline_white_48dp);
+                        playStopButton.setImageResource(R.drawable.ic_stop_white_48dp);
                         player_status = STATUS_PLAYING;
                     }
                 }
@@ -142,9 +180,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        volumeControl.setMax(maxVolume);
-        volumeControl.setProgress(curVolume);
-        volumeControl.setEnabled(false);
+
         volumeControl.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
               {
                    @Override
@@ -155,13 +191,14 @@ public class MainActivity extends AppCompatActivity {
                    }
                   @Override
                   public void onProgressChanged(SeekBar arg0, int progress, boolean arg2) {
-                      Log.i("MyActivity", "Progress " + progress);
-                      int maxVolume = 15;
-                      float log1 = (float) (Math.log(maxVolume - progress) / Math.log(maxVolume));
-                      Intent serviceIntent = new Intent(getApplicationContext(), Music_service.class);
-                      serviceIntent.setAction(VOLUME_CHANGE);
-                      serviceIntent.putExtra("vol", 1 - log1);
-                      startService(serviceIntent);
+
+                      if (!muted) {
+                          Log.i("MyActivity", "Progress " + progress);
+                          Intent serviceIntent = new Intent(getApplicationContext(), Music_service.class);
+                          serviceIntent.setAction(VOLUME_CHANGE);
+                          serviceIntent.putExtra("vol", calcularVolumen());
+                          startService(serviceIntent);
+                      }
                   }
                   }
             );
@@ -189,6 +226,13 @@ public class MainActivity extends AppCompatActivity {
                 muteButton.setAlpha(255);
                 volumeControl.setEnabled(true);
 
+                break;
+            case SATUS_LOST_STREAM:
+                reconectButton.setVisibility(View.VISIBLE);
+                reconectButton.startAnimation(reconnectBlink);
+                muteButton.setEnabled(false);
+                muteButton.setAlpha(64);
+                volumeControl.setEnabled(false);
                 break;
             case STATUS_STOP:
                 reconectButton.clearAnimation();
@@ -219,8 +263,19 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // Save the current  state
+        savedInstanceState.putString("player_status", player_status);
+        savedInstanceState.putBoolean("mute_button_state", muted);
+        savedInstanceState.putBoolean("volume_bar_state", volumeControl.isEnabled());
 
-        @Override
+        Log.i("MyActivity", "saveInstanceState ");
+        // Always call the superclass
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         Log.i("MyActivity", "Activity On Stop ");
@@ -233,7 +288,7 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();  // Always call the superclass method first
         Log.i("MyActivity", "Activity On Destroy ");
 
-        stopService(new Intent(getApplicationContext(), Music_service.class));
+//        stopService(new Intent(getApplicationContext(), Music_service.class));
 
     }
 }

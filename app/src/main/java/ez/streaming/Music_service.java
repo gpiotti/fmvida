@@ -10,8 +10,10 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 import android.os.CountDownTimer;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -19,15 +21,16 @@ import android.widget.Toast;
 import java.io.IOException;
 
 
+
 public class Music_service extends Service implements MediaPlayer.OnErrorListener, AudioManager.OnAudioFocusChangeListener {
 
 
     private  MediaPlayer mediaPlayer;
     private boolean auto_reconnect = false;
+    private WifiManager.WifiLock wifiLock = null;
 
     String url = "rtsp://iptv.cybertap.com.ar:1935/fmvida/fmvida.stream";
     //String url = "http://72.13.93.91:80";
-
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -36,12 +39,9 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
         return null;
     }
 
-
     private BroadcastReceiver mConnReceiver = new BroadcastReceiver() {
-
         public void onReceive(Context context, Intent intent) {
             handleConnectivity(intent);
-
         }
     };
 
@@ -63,7 +63,6 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
                         .setContentTitle("Fm Vida 103.5")
                         .setContentText("Reproduciendo...");
 
-
         // Creates an explicit intent for an Activity in your app
         final Intent notificationIntent = new Intent(this, MainActivity.class);
 
@@ -82,59 +81,35 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
         int mId = 1;
         // mId allows you to update the notification later on.
 
-
-
-
         if (intent.getAction().equals(MainActivity.ACTION_START)) {
             startForeground(mId, mBuilder.build());
             initMediaPlayer(intent.getFloatExtra("vol", 10f));
             Log.i("Service", "Iniciando mediaPlayer");
             auto_reconnect = true;
-
             IntentFilter intentFilter = new IntentFilter();
             intentFilter.addAction("android.net.wifi.WIFI_STATE_CHANGED");
             intentFilter.addAction("android.net.wifi.CONNECTIVITY_ACTION");
             intentFilter.addAction("android.net.wifi.STATE_CHANGE");
-
-
-            registerReceiver(mConnReceiver,
-                    new IntentFilter(intentFilter));
-
-
+            registerReceiver(mConnReceiver, new IntentFilter(intentFilter));
         }
         else if(intent.getAction().equals((MainActivity.ACTION_STOP))){
             auto_reconnect=false;
             sendToActivity(MainActivity.STATUS_STOP);
             mediaPlayer.stop();
-
             stopSelf();
-
-
             Log.i("Service", "MediaPlayer stop " + mediaPlayer.isPlaying());
         }
-
         else if(intent.getAction().equals((MainActivity.MUTE))){
-
             mediaPlayer.setVolume(0f,0f);
-
         }
         else if(intent.getAction().equals((MainActivity.UNMUTE))){
-
             mediaPlayer.setVolume(intent.getFloatExtra("lastVolume",10f),intent.getFloatExtra("lastVolume",10f));
-
         }
         else if(intent.getAction().equals((MainActivity.VOLUME_CHANGE))){
-
-
             mediaPlayer.setVolume(intent.getFloatExtra("vol",10f),intent.getFloatExtra("vol",10f));
         }
-
-
-
         return Service.START_NOT_STICKY;
-
     }
-
 
     private void handleConnectivity(Intent intent) {
         final ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -143,10 +118,8 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
         if (netInfo != null && netInfo.isConnected() && netInfo.isConnectedOrConnecting()) {
             Log.i("Service", "esta conectado " + intent.getStringExtra("extraInfo") + " mas datos: " + intent.getParcelableExtra("otherNetwork"));
             if (auto_reconnect) {
-
                 mediaPlayer.reset();
                 initMediaPlayer(15f);
-
             }
 
 
@@ -160,23 +133,24 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
         else  if(netInfo != null){
             Log.i("Service", "otro estado  " + intent.getStringExtra("extraInfo") + netInfo.isConnected() + netInfo.isConnectedOrConnecting())  ;
         }
-
     }
 
     private void sendToActivity(String command) {
         Intent intent = new Intent("sendMessage");
         intent.putExtra("command", command);
-
                 LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-        Log.i("Service", "sended algo " + command );
-
+        Log.i("Service", "sended algo " + command);
     }
 
    public void initMediaPlayer(final Float init_volume) {
         Log.i("Service", "Init Player ");
-       sendToActivity(MainActivity.STATUS_CONNECTING);
+        sendToActivity(MainActivity.STATUS_CONNECTING);
         this.mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        mediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
+        this.wifiLock = ((WifiManager) getSystemService(Context.WIFI_SERVICE))
+                .createWifiLock(WifiManager.WIFI_MODE_FULL, "mylock");
+        this.wifiLock.acquire();
         try {
             mediaPlayer.setDataSource(url);
         } catch (IOException e) {
@@ -260,7 +234,6 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
                 public void onTick(long millisUntilFinished) {
                 }
                 public void onFinish() {
-
                     initMediaPlayer(10f);
                     sendToActivity((MainActivity.STATUS_LOST_STREAM));
                 }
@@ -274,6 +247,7 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
         super.onDestroy();
         Log.i("Service", "Service On destroy ");
         unregisterReceiver(mConnReceiver);
+        wifiLock.release();
         mediaPlayer.release();
         mediaPlayer = null;
     }

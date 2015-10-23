@@ -92,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
         marquesina = (TextView) findViewById(R.id.programa);
 
         marquesina.setSelected(true);
+        marquesina.setVisibility(View.INVISIBLE);
 
 
         if (savedInstanceState != null) {

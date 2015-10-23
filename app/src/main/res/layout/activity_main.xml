@@ -146,7 +146,7 @@
             android:fadingEdge="horizontal"
             android:marqueeRepeatLimit="marquee_forever"
             android:scrollHorizontally="true"
-            />
+            android:visibility="invisible" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -166,11 +166,17 @@
             <SeekBar
                 android:id="@+id/volBar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="36dp"
                 android:enabled="false"
                 android:paddingLeft="32dp"
                 android:paddingRight="32dp"
-                android:minHeight="36dp" />
+                android:height="36dp"
+                android:minHeight="36dp"
+                android:maxHeight="36dp"
+                android:progressDrawable="@drawable/red_scrubber_progress"
+                android:thumb="@drawable/red_scrubber_control"
+                android:splitTrack="false"
+                />
         </LinearLayout>
 
 

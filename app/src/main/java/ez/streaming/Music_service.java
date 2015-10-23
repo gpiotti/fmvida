@@ -24,7 +24,7 @@ import java.io.IOException;
 
 public class Music_service extends Service implements MediaPlayer.OnErrorListener, AudioManager.OnAudioFocusChangeListener {
 
-
+    private boolean prepared =false;
     private  MediaPlayer mediaPlayer;
     private boolean auto_reconnect = false;
     private WifiManager.WifiLock wifiLock = null;
@@ -48,6 +48,7 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i("Service", "Service onStartCommand ");
 
+
         AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         int result = audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
                 AudioManager.AUDIOFOCUS_GAIN);
@@ -68,12 +69,7 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
 
         notificationIntent.setAction(Intent.ACTION_MAIN);
         notificationIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-        // The stack builder object will contain an artificial back stack for the
-        // started Activity.
-        // This ensures that navigating backward from the Activity leads out of
-        // your application to the Home screen.
 
-        // Adds the back stack for the Intent (but not the Intent itself)
         PendingIntent resultPendingIntent = PendingIntent.getActivity(this,0,notificationIntent,PendingIntent.FLAG_UPDATE_CURRENT);
 
         mBuilder.setContentIntent(resultPendingIntent);
@@ -83,30 +79,30 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
 
         if (intent.getAction().equals(MainActivity.ACTION_START)) {
             startForeground(mId, mBuilder.build());
-            initMediaPlayer(intent.getFloatExtra("vol", 10f));
+            initMediaPlayer(intent.getFloatExtra("vol", 0.7f));
             Log.i("Service", "Iniciando mediaPlayer");
             auto_reconnect = true;
+
             IntentFilter intentFilter = new IntentFilter();
             intentFilter.addAction("android.net.wifi.WIFI_STATE_CHANGED");
             intentFilter.addAction("android.net.wifi.CONNECTIVITY_ACTION");
             intentFilter.addAction("android.net.wifi.STATE_CHANGE");
             registerReceiver(mConnReceiver, new IntentFilter(intentFilter));
+            Log.i("Service", "Registrado mConnReceiver");
         }
         else if(intent.getAction().equals((MainActivity.ACTION_STOP))){
             auto_reconnect=false;
-            sendToActivity(MainActivity.STATUS_STOP);
-            mediaPlayer.stop();
-            stopSelf();
+            stopMediaPlayer();
             Log.i("Service", "MediaPlayer stop " + mediaPlayer.isPlaying());
         }
         else if(intent.getAction().equals((MainActivity.MUTE))){
             mediaPlayer.setVolume(0f,0f);
         }
         else if(intent.getAction().equals((MainActivity.UNMUTE))){
-            mediaPlayer.setVolume(intent.getFloatExtra("lastVolume",10f),intent.getFloatExtra("lastVolume",10f));
+            mediaPlayer.setVolume(intent.getFloatExtra("lastVolume",0.7f),intent.getFloatExtra("lastVolume",0.7f));
         }
         else if(intent.getAction().equals((MainActivity.VOLUME_CHANGE))){
-            mediaPlayer.setVolume(intent.getFloatExtra("vol",10f),intent.getFloatExtra("vol",10f));
+            mediaPlayer.setVolume(intent.getFloatExtra("vol",0.7f),intent.getFloatExtra("vol",0.7f));
         }
         return Service.START_NOT_STICKY;
     }
@@ -119,7 +115,7 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
             Log.i("Service", "esta conectado " + intent.getStringExtra("extraInfo") + " mas datos: " + intent.getParcelableExtra("otherNetwork"));
             if (auto_reconnect) {
                 mediaPlayer.reset();
-                initMediaPlayer(15f);
+                initMediaPlayer(0.7f);
             }
 
 
@@ -139,7 +135,7 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
         Intent intent = new Intent("sendMessage");
         intent.putExtra("command", command);
                 LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-        Log.i("Service", "sended algo " + command);
+
     }
 
    public void initMediaPlayer(final Float init_volume) {
@@ -158,14 +154,17 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
         }
         mediaPlayer.prepareAsync();
         Toast.makeText(getApplicationContext(), "Conectando...", Toast.LENGTH_LONG).show();
+       Log.i("Service", "Iniciado Player ");
         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mediaPlayer) {
+                Log.i("Service", "Preparado");
                 mediaPlayer.setVolume(init_volume, init_volume);
                 if (auto_reconnect) {
-                    Log.i("Service", "Por start");
+
                     mediaPlayer.start();
                     sendToActivity(MainActivity.STATUS_PLAYING);
+                    prepared=true;
                 }
                 Toast.makeText(getApplicationContext(), "Conectado", Toast.LENGTH_SHORT).show();
             }
@@ -182,43 +181,58 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
 
     }
 
+    public void stopMediaPlayer() {
+        if (prepared==true) {
+            sendToActivity(MainActivity.STATUS_STOP);
+            Log.i("Service", "STATUS_STOP sended");
+            mediaPlayer.stop();
+            prepared=false;
+            stopSelf();
+        }
+
+        }
+
 
     public void onAudioFocusChange(int focusChange) {
         switch (focusChange) {
 
             case AudioManager.AUDIOFOCUS_GAIN:
                 Log.i("Service", "Audio Focus GAIN");
-                // resume playback
-                //if (mediaPlayer == null) initMediaPlayer(1.0f);
-                //else
-                if (mediaPlayer.isPlaying()) mediaPlayer.setVolume(0.6f,0.6f);
+
+
+                    mediaPlayer.setVolume(0.6f, 0.6f);
+
 
                 break;
 
 
             case AudioManager.AUDIOFOCUS_LOSS:
                 Log.i("Service", "Audio Focus LOSS");
-                // Lost focus for an unbounded amount of time: stop playback and release media player
-                if (mediaPlayer.isPlaying()) mediaPlayer.stop();
-                sendToActivity(MainActivity.STATUS_STOP);
-                stopSelf();
 
-                break;
+                if (prepared==true) {
+                    stopMediaPlayer();
+                }
+
+
+        break;
 
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
                 Log.i("Service", "Audio Focus TRANSIENT");
-                // Lost focus for a short time, but we have to stop
-                // playback. We don't release the media player because playback
-                // is likely to resume
-                if (mediaPlayer.isPlaying()) mediaPlayer.pause();
+
+                if (prepared==true) {
+                    mediaPlayer.pause();
+                }
+
 
                 break;
 
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
                 Log.i("Service", "Audio Focus Duck");
-                // Lost focus for a short time, but it's ok to keep playing
-                // at an attenuated level
-                if (mediaPlayer.isPlaying()) mediaPlayer.setVolume(0.1f, 0.1f);
+
+                if (prepared==true) {
+                    mediaPlayer.setVolume(0.1f, 0.1f);
+                }
+
                 break;
         }
     }
@@ -249,6 +263,6 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
         unregisterReceiver(mConnReceiver);
         wifiLock.release();
         mediaPlayer.release();
-        mediaPlayer = null;
+        //mediaPlayer = null;
     }
 }

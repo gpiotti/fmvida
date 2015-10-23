@@ -8,9 +8,7 @@ import android.content.Intent;
 
 import android.media.AudioManager;
 
-import android.net.ConnectivityManager;
 
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -130,11 +128,8 @@ public class MainActivity extends AppCompatActivity {
                         muteButton.setImageResource(R.drawable.ic_volume_up_black_36dp);
                         playStopButton.setImageResource(R.drawable.ic_play_arrow_white_48dp);
                     } else if (player_status == STATUS_STOP) {
-                        muteButton.setEnabled(true);
+                        Log.i("MyActivity", "llego ");
                         startService(new Intent(getApplicationContext(), Music_service.class).setAction(ACTION_START).putExtra("vol", calcularVolumen()));
-                        Log.i("my", "asd");
-                        volumeControl.setEnabled(true);
-                        muteButton.setAlpha(255);
                         playStopButton.setImageResource(R.drawable.ic_stop_white_48dp);
                         player_status = STATUS_PLAYING;
                     }
@@ -247,9 +242,11 @@ public class MainActivity extends AppCompatActivity {
                 muteButton.setEnabled(false);
                 muteButton.setAlpha(64);
                 volumeControl.setEnabled(false);
+                player_status=STATUS_STOP;
 
                 break;
             case STATUS_STOP:
+                Log.i("MyActivity", "UPDATE UI STOP ");
                 reconectButton.clearAnimation();
                 reconectButton.setVisibility(View.INVISIBLE);
                 muteButton.setEnabled(false);
@@ -257,6 +254,7 @@ public class MainActivity extends AppCompatActivity {
                 player_status = STATUS_STOP;
                 playStopButton.setImageResource(R.drawable.ic_play_arrow_white_48dp);
                 volumeControl.setEnabled(false);
+
                 break;
         }
     }
@@ -264,7 +262,6 @@ public class MainActivity extends AppCompatActivity {
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-
 
             switch(intent.getStringExtra("command")) {
                 case STATUS_CONNECTING:   updateUI(STATUS_CONNECTING);

@@ -1,4 +1,4 @@
-package ez.streaming;
+package com.fmvida;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

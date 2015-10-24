@@ -165,6 +165,7 @@
 
             <SeekBar
                 android:id="@+id/volBar"
+                android:progress="10"
                 android:layout_width="match_parent"
                 android:layout_height="36dp"
                 android:enabled="false"

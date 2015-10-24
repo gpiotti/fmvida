@@ -1,5 +1,4 @@
-package ez.streaming;
-
+package com.fmvida;
 import android.content.Context;
 import android.content.Intent;
 

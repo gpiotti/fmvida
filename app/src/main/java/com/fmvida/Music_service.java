@@ -93,8 +93,9 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
             Log.i("Service", "Registrado mConnReceiver");
         }
         else if(intent.getAction().equals((MainActivity.ACTION_STOP))){
-            auto_reconnect=false;
-            stopMediaPlayer();
+            if(mediaPlayer!=null){
+                stopMediaPlayer();
+            }
             Log.i("Service", "MediaPlayer stop " + mediaPlayer.isPlaying());
         }
         else if(intent.getAction().equals((MainActivity.MUTE))){
@@ -205,7 +206,17 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
         switch (focusChange) {
             case AudioManager.AUDIOFOCUS_GAIN:
                 Log.i("Service", "Audio Focus GAIN");
-                    mediaPlayer.setVolume(0.6f, 0.6f);
+                try {
+                    if (mediaPlayer != null && prepared==true) {
+
+                        mediaPlayer.setVolume(volumen, volumen);
+                        Log.i("Service", "seteado volumen");
+                    }
+                } catch (Exception e) {
+                    Log.i("Service", "error: " + e.getMessage());
+                }
+
+
                 break;
 
             case AudioManager.AUDIOFOCUS_LOSS:
@@ -217,9 +228,9 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
 
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
                 Log.i("Service", "Audio Focus TRANSIENT");
-
                 if (prepared==true) {
-                    mediaPlayer.pause();
+
+                    mediaPlayer.setVolume(0f, 0f);
                 }
                 break;
 

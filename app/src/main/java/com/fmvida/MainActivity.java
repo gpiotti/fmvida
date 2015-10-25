@@ -27,26 +27,27 @@ public class MainActivity extends AppCompatActivity {
     AudioManager audioManager;
 
     //Buttons y UI
-    ImageButton reconectButton;
+    //ImageButton reconectButton;
     ImageButton powerButton;
     ImageButton muteButton;
     ImageButton playStopButton;
     SeekBar volumeControl;
     TextView marquesina;
     Animation reconnectBlink;
+    TextView connectingText;
 
 
-    public static final String STATUS_PLAYING = "ez.streaming.action.STATUS_PLAYING";
-    public static final String STATUS_STOP = "ez.streaming.action.STATUS_STOP";
-    public static final String STATUS_CONNECTING = "ez.streaming.action.STATUS_CONNECTING";
-    public static final String STATUS_LOST_STREAM = "ez.streaming.action.SATUS_LOST_STREAM";
+    public static final String STATUS_PLAYING = "com.fmvida..action.STATUS_PLAYING";
+    public static final String STATUS_STOP = "com.fmvida.action.STATUS_STOP";
+    public static final String STATUS_CONNECTING = "com.fmvida.action.STATUS_CONNECTING";
+    public static final String STATUS_LOST_STREAM = "com.fmvida.action.SATUS_LOST_STREAM";
 
-    public static final String ACTION_START = "ez.streaming.action.ACTION_START";
-    public static final String ACTION_STOP = "ez.streaming.action.ACTION_STOP";
+    public static final String ACTION_START = "com.fmvida.action.ACTION_START";
+    public static final String ACTION_STOP = "com.fmvida.action.ACTION_STOP";
 
-    public static final String VOLUME_CHANGE = "ez.streaming.action.VOLUME_CHANGE";
-    public static final String MUTE = "ez.streaming.action.MUTE";
-    public static final String UNMUTE = "ez.streaming.action.UNMUTE";
+    public static final String VOLUME_CHANGE = "com.fmvida.action.VOLUME_CHANGE";
+    public static final String MUTE = "com.fmvida.action.MUTE";
+    public static final String UNMUTE = "com.fmvida.action.UNMUTE";
 
     public static final String FACEBOOK_URL = "https://www.facebook.com/juancruz.rubino.12";
     public static final String TWITTER_URL = "https://twitter.com/fmvida1035";
@@ -65,8 +66,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        reconectButton = (ImageButton) findViewById(R.id.reconnecting);
+        //reconectButton = (ImageButton) findViewById(R.id.reconnecting);
+        connectingText = (TextView) findViewById(R.id.connectingText);
         reconnectBlink = AnimationUtils.loadAnimation(this, R.anim.reconect_blink);
+
 
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
@@ -133,8 +136,14 @@ public class MainActivity extends AppCompatActivity {
         powerButton.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
-                startService(new Intent(getApplicationContext(), Music_service.class).setAction(ACTION_STOP));
-                finish();
+                if (player_status == STATUS_PLAYING || player_status == STATUS_CONNECTING) {
+                    startService(new Intent(getApplicationContext(), Music_service.class).setAction(ACTION_STOP));
+                    finish();
+                }
+                else{
+                    finish();
+                }
+
             }
         });
 
@@ -212,24 +221,27 @@ public class MainActivity extends AppCompatActivity {
     private void updateUI(String command){
         switch(command) {
             case  STATUS_CONNECTING:
-                reconectButton.setVisibility(View.VISIBLE);
-                reconectButton.startAnimation(reconnectBlink);
+                connectingText.setVisibility(View.VISIBLE);
+                connectingText.startAnimation(reconnectBlink);
+                connectingText.setVisibility(View.VISIBLE);
                 muteButton.setEnabled(false);
                 muteButton.setAlpha(64);
                 volumeControl.setEnabled(false);
 
                 break;
             case  STATUS_PLAYING:
-                reconectButton.clearAnimation();
-                reconectButton.setVisibility(View.INVISIBLE);
+                connectingText.clearAnimation();
+                connectingText.setVisibility(View.INVISIBLE);
+                connectingText.setVisibility(View.INVISIBLE);
                 muteButton.setEnabled(true);
                 muteButton.setAlpha(255);
                 volumeControl.setEnabled(true);
 
                 break;
             case STATUS_LOST_STREAM:
-                reconectButton.setVisibility(View.VISIBLE);
-                reconectButton.startAnimation(reconnectBlink);
+                connectingText.setVisibility(View.VISIBLE);
+                connectingText.startAnimation(reconnectBlink);
+                connectingText.setVisibility(View.VISIBLE);
                 muteButton.setEnabled(false);
                 muteButton.setAlpha(64);
                 volumeControl.setEnabled(false);
@@ -238,8 +250,9 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case STATUS_STOP:
                 Log.i("MyActivity", "UPDATE UI STOP ");
-                reconectButton.clearAnimation();
-                reconectButton.setVisibility(View.INVISIBLE);
+                connectingText.clearAnimation();
+                connectingText.setVisibility(View.INVISIBLE);
+                connectingText.setVisibility(View.INVISIBLE);
                 muteButton.setEnabled(false);
                 muteButton.setAlpha(64);
                 player_status = STATUS_STOP;

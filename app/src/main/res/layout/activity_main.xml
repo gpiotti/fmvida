@@ -17,23 +17,17 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <TextView
+            <ImageView
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/title"
-
-                android:textColor="#000000"
-
-
-
-                android:textSize="20sp"
-
-                android:paddingTop="16dp"
+                android:src="@drawable/titulo"
+                android:paddingTop="8dp"
                 android:paddingBottom="8dp"
-                android:paddingLeft="16dp"
-
-                />
+                android:paddingLeft="0dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                 />
 
             <ImageButton
                 android:id="@+id/power"
@@ -43,7 +37,6 @@
                 android:background="@null"
                 android:layout_alignParentRight="true"
                 android:paddingTop="16dp"
-
                 android:paddingRight="16dp"
                 />
         </RelativeLayout>
@@ -58,6 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <ImageView
+
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:paddingBottom="48dp"
@@ -66,6 +60,22 @@
                 android:src="@drawable/logo"
                 android:background="@android:color/black"
                 />
+
+            <!--
+            <TextView
+                android:id="@+id/connectingText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Conectando..."
+                android:textColor="#000000"
+                android:textSize="18dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:padding="20dp"
+                android:background="@drawable/back"
+                android:visibility="invisible"
+                />
+                -->
 
             <ImageButton
                 android:id="@+id/playStopButton"
@@ -78,6 +88,7 @@
                 android:paddingBottom="8dp"
                 />
 
+            <!--
             <ImageButton
             android:id="@+id/reconnecting"
             android:layout_width="wrap_content"
@@ -90,7 +101,19 @@
             android:paddingBottom="8dp"
 
             />
-
+            -->
+            <TextView
+                android:id="@+id/connectingText"
+                android:paddingTop="8dp"
+                android:paddingRight="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Conectando..."
+                android:visibility="invisible"
+                android:textColor="#ffffff"
+                android:layout_alignParentRight="true"
+                android:textSize="16dp"
+                />
 
 
             <ImageButton

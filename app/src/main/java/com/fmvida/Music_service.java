@@ -62,7 +62,7 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setSmallIcon(R.drawable.ic_favorite_outline_white_48dp)
                         .setContentTitle("Fm Vida 103.5")
                         .setContentText("Reproduciendo...");
 

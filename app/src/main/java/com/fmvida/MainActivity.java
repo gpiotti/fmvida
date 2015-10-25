@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+
 public class MainActivity extends AppCompatActivity {
     //Audiomanager
     AudioManager audioManager;
@@ -56,8 +57,10 @@ public class MainActivity extends AppCompatActivity {
     boolean muted = false;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
 
         LocalBroadcastManager.getInstance(this).registerReceiver(
                 mMessageReceiver, new IntentFilter("sendMessage"));
@@ -314,11 +317,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();  // Always call the superclass method first
         Log.i("MyActivity", "Activity On Destroy ");
-
         stopService(new Intent(getApplicationContext(), Music_service.class));
         finish();
-
-
     }
 }
 

@@ -52,6 +52,7 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i("Service", "Service onStartCommand ");
 
+
         AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         int result = audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
                 AudioManager.AUDIOFOCUS_GAIN);
@@ -99,13 +100,19 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
             Log.i("Service", "MediaPlayer stop " + mediaPlayer.isPlaying());
         }
         else if(intent.getAction().equals((MainActivity.MUTE))){
-            mediaPlayer.setVolume(0f,0f);
+            if(mediaPlayer!=null) {
+                mediaPlayer.setVolume(0f, 0f);
+            }
         }
         else if(intent.getAction().equals((MainActivity.UNMUTE))){
-            mediaPlayer.setVolume(intent.getFloatExtra("lastVolume",0.7f),intent.getFloatExtra("lastVolume",0.7f));
+            if(mediaPlayer!=null) {
+                mediaPlayer.setVolume(intent.getFloatExtra("lastVolume", 0.7f), intent.getFloatExtra("lastVolume", 0.7f));
+            }
         }
         else if(intent.getAction().equals((MainActivity.VOLUME_CHANGE))){
-            mediaPlayer.setVolume(intent.getFloatExtra("vol",0.7f),intent.getFloatExtra("vol",0.7f));
+            if(mediaPlayer!=null) {
+                mediaPlayer.setVolume(intent.getFloatExtra("vol", 0.7f), intent.getFloatExtra("vol", 0.7f));
+            }
         }
         return Service.START_NOT_STICKY;
     }

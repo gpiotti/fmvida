@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
         int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-        int curVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        //int curVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 
         powerButton = (ImageButton) findViewById(R.id.power);
         muteButton = (ImageButton) findViewById(R.id.mMuteButton);

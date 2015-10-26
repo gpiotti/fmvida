@@ -22,6 +22,10 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
 
 public class MainActivity extends AppCompatActivity {
     //Audiomanager
@@ -60,6 +64,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //Get a Tracker (should auto-report)
+        final Tracker t = ((AnalyticsApplication) getApplication()).getTracker(AnalyticsApplication.TrackerName.APP_TRACKER);
+        // Get tracker.
+
+
 
 
         LocalBroadcastManager.getInstance(this).registerReceiver(
@@ -179,6 +188,13 @@ public class MainActivity extends AppCompatActivity {
                 intent.setAction(Intent.ACTION_VIEW);
                 intent.addCategory(Intent.CATEGORY_BROWSABLE);
                 intent.setData(Uri.parse(FACEBOOK_URL));
+
+                // Build and send an Event.
+                t.send(new HitBuilders.EventBuilder()
+                        .setCategory("Facebook")
+                        .setAction("Click")
+                        .setLabel("Social")
+                        .build());
                 startActivity(intent);
             }
         });
@@ -190,6 +206,12 @@ public class MainActivity extends AppCompatActivity {
                 intent.setAction(Intent.ACTION_VIEW);
                 intent.addCategory(Intent.CATEGORY_BROWSABLE);
                 intent.setData(Uri.parse(TWITTER_URL));
+                // Build and send an Event.
+                t.send(new HitBuilders.EventBuilder()
+                        .setCategory("Twitter")
+                        .setAction("Click")
+                        .setLabel("Social")
+                        .build());
                 startActivity(intent);
             }
         });
@@ -214,6 +236,13 @@ public class MainActivity extends AppCompatActivity {
             }
             volumeControl.setEnabled(savedInstanceState.getBoolean("volume_bar_state"));
         }
+    }
+
+    protected void onStart(){
+        super.onStart();
+        //Get an Analytics tracker to report app starts & uncaught exceptions etc.
+        //GoogleAnalytics.getInstance(this).reportActivityStart(this);
+        Log.i("MyActivity", "onStart ");
     }
 
     private Float calcularVolumen(){
@@ -305,6 +334,9 @@ public class MainActivity extends AppCompatActivity {
         if (player_status == STATUS_STOP){
             stopService(new Intent(getApplicationContext(), Music_service.class));
         }
+
+        //Stop the analytics tracking
+      //  GoogleAnalytics.getInstance(this).reportActivityStop(this);
 
 
 

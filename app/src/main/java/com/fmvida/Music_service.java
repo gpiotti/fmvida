@@ -261,6 +261,7 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
         Log.i("Service", "Error: " + what + " Extra: " + extra);
         mediaPlayer.reset();
         sendToActivity((MainActivity.STATUS_STOP));
+        prepared=false;
 
         if (what == 100 || what == -110) {
             new CountDownTimer(30000, 1000) {

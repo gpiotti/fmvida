@@ -32,6 +32,7 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
     private WifiManager.WifiLock wifiLock = null;
     private float volumen;
     private boolean conectado=false;
+    private boolean muted = false;
 
     String url = "rtsp://iptv.cybertap.com.ar:1935/fmvida/fmvida.stream";
     //String url = "http://72.13.93.91:80";
@@ -64,6 +65,7 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_favorite_outline_white_48dp)
+                        .setColor(0xff123456)
                         .setContentTitle("Fm Vida 103.5")
                         .setContentText("Reproduciendo...");
 
@@ -102,16 +104,20 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
         else if(intent.getAction().equals((MainActivity.MUTE))){
             if(mediaPlayer!=null) {
                 mediaPlayer.setVolume(0f, 0f);
+                this.muted = true;
             }
         }
         else if(intent.getAction().equals((MainActivity.UNMUTE))){
             if(mediaPlayer!=null) {
                 mediaPlayer.setVolume(intent.getFloatExtra("lastVolume", 0.7f), intent.getFloatExtra("lastVolume", 0.7f));
+                volumen = intent.getFloatExtra("lastVolume", 0.7f);
+                this.muted=false;
             }
         }
         else if(intent.getAction().equals((MainActivity.VOLUME_CHANGE))){
             if(mediaPlayer!=null) {
                 mediaPlayer.setVolume(intent.getFloatExtra("vol", 0.7f), intent.getFloatExtra("vol", 0.7f));
+                volumen = intent.getFloatExtra("lastVolume", 0.7f);
             }
         }
         return Service.START_NOT_STICKY;
@@ -214,7 +220,7 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
             case AudioManager.AUDIOFOCUS_GAIN:
                 Log.i("Service", "Audio Focus GAIN");
                 try {
-                    if (mediaPlayer != null && prepared==true) {
+                    if (mediaPlayer != null && prepared && !muted) {
 
                         mediaPlayer.setVolume(volumen, volumen);
                         Log.i("Service", "seteado volumen");
@@ -228,7 +234,7 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
 
             case AudioManager.AUDIOFOCUS_LOSS:
                 Log.i("Service", "Audio Focus LOSS");
-                if (prepared==true) {
+                if (prepared) {
                     stopMediaPlayer();
                 }
                 break;
@@ -243,7 +249,7 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
 
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
                 Log.i("Service", "Audio Focus Duck");
-                if (prepared==true) {
+                if (prepared  && !muted ) {
                     mediaPlayer.setVolume(0.1f, 0.1f);
                 }
                 break;

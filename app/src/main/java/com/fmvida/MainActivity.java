@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
     ImageButton muteButton;
     ImageButton playStopButton;
     SeekBar volumeControl;
-    TextView marquesina;
     Animation reconnectBlink;
     TextView connectingText;
 
@@ -99,28 +98,23 @@ public class MainActivity extends AppCompatActivity {
         volumeControl.setMax(maxVolume);
         Log.i("MyActivity", "Max Volumen : " + maxVolume);
         volumeControl.setProgress((int)Math.round( maxVolume * 0.6));
-        marquesina = (TextView) findViewById(R.id.programa);
+        playStopButton.setOnClickListener(new View.OnClickListener() {
 
-        marquesina.setSelected(true);
-        marquesina.setVisibility(View.INVISIBLE);
-
-            playStopButton.setOnClickListener(new View.OnClickListener() {
-
-                public void onClick(View v) {
-                    if (player_status == STATUS_PLAYING) {
-                        player_status = STATUS_STOP;
-                        startService(new Intent(getApplicationContext(), Music_service.class).setAction(ACTION_STOP));
-                        muted=false;
-                        muteButton.setImageResource(R.drawable.ic_volume_up_black_36dp);
-                        playStopButton.setImageResource(R.drawable.ic_play_arrow_white_48dp);
-                    } else if (player_status == STATUS_STOP) {
-                        startService(new Intent(getApplicationContext(), Music_service.class).setAction(ACTION_START).putExtra("vol", calcularVolumen()));
-                        Log.i("MyActivity", "Arrancando con volumen : "+ calcularVolumen());
-                        playStopButton.setImageResource(R.drawable.ic_stop_white_48dp);
-                        player_status = STATUS_PLAYING;
-                    }
+            public void onClick(View v) {
+                if (player_status == STATUS_PLAYING) {
+                    player_status = STATUS_STOP;
+                    startService(new Intent(getApplicationContext(), Music_service.class).setAction(ACTION_STOP));
+                    muted=false;
+                    muteButton.setImageResource(R.drawable.ic_volume_up_black_36dp);
+                    playStopButton.setImageResource(R.drawable.ic_play_arrow_white_48dp);
+                } else if (player_status == STATUS_STOP) {
+                    startService(new Intent(getApplicationContext(), Music_service.class).setAction(ACTION_START).putExtra("vol", calcularVolumen()));
+                    Log.i("MyActivity", "Arrancando con volumen : "+ calcularVolumen());
+                    playStopButton.setImageResource(R.drawable.ic_stop_white_48dp);
+                    player_status = STATUS_PLAYING;
                 }
-            });
+            }
+        });
 
         muteButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

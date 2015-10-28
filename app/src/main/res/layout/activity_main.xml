@@ -27,9 +27,11 @@
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
                 android:paddingLeft="0dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginStart="12dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
-                 />
+                android:layout_alignParentStart="true" />
 
             <ImageButton
                 android:id="@+id/power"
@@ -51,7 +53,8 @@
         android:layout_weight="5">
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@drawable/back">
             <ImageView
 
                 android:layout_width="match_parent"
@@ -60,8 +63,10 @@
                 android:paddingRight="16dp"
                 android:id="@+id/logo"
                 android:src="@drawable/logo"
-                android:background="@android:color/black"
-                />
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginLeft="21dp"
+                android:layout_marginStart="21dp" />
 
             <!--
             <TextView
@@ -85,10 +90,10 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_play_arrow_white_48dp"
                 android:background="@null"
+                android:paddingBottom="8dp"
                 android:layout_centerHorizontal="true"
                 android:layout_alignParentBottom="true"
-                android:paddingBottom="8dp"
-                />
+                android:layout_alignTop="@+id/facebook" />
 
             <!--
             <ImageButton
@@ -124,12 +129,12 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/facebook"
                 android:background="@null"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
                 android:paddingRight="16dp"
                 android:paddingBottom="8dp"
 
-                />
+                android:layout_above="@+id/twitter"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
 
             <ImageButton
                 android:id="@+id/twitter"
@@ -137,12 +142,12 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/twitter"
                 android:background="@null"
-                android:layout_above="@+id/facebook"
-                android:layout_alignParentRight="true"
                 android:paddingRight="16dp"
                 android:paddingBottom="8dp"
 
-                />
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
 
         </RelativeLayout>
 
@@ -151,32 +156,14 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        >
+        android:weightSum="1">
 
-        <TextView
-            android:id="@+id/programa"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Estas escuchando ............. Nombre del Programa"
-            android:textSize="20sp"
-            android:textColor="#ef4b4d"
-            android:paddingLeft="16dp"
-            android:paddingTop="8dp"
-            android:singleLine="true"
-            android:lines="1"
-            android:ellipsize="marquee"
-            android:fadingEdge="horizontal"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:scrollHorizontally="true"
-            android:visibility="invisible" />
+            android:layout_height="102dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="16dp">
             <ImageButton
                 android:id="@+id/mMuteButton"
                 android:layout_width="wrap_content"
@@ -185,14 +172,15 @@
                 android:paddingLeft="16dp"
                 android:background="@null"
 
-                />
-
+                android:layout_alignTop="@+id/volBar"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
 
             <SeekBar
                 android:id="@+id/volBar"
                 android:progress="10"
-                android:layout_width="match_parent"
-                android:layout_height="36dp"
+                android:layout_width="137dp"
+                android:layout_height="wrap_content"
                 android:enabled="false"
                 android:paddingLeft="32dp"
                 android:paddingRight="32dp"
@@ -202,8 +190,13 @@
                 android:progressDrawable="@drawable/red_scrubber_progress"
                 android:thumb="@drawable/red_scrubber_control"
                 android:splitTrack="false"
-                />
-        </LinearLayout>
+                android:layout_gravity="center_horizontal"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_toRightOf="@+id/mMuteButton"
+                android:layout_toEndOf="@+id/mMuteButton" />
+        </RelativeLayout>
 
 
     </LinearLayout>

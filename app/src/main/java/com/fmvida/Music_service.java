@@ -11,7 +11,6 @@ import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
-import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
@@ -23,7 +22,7 @@ import java.io.IOException;
 
 
 
-public class Music_service extends Service implements MediaPlayer.OnErrorListener, AudioManager.OnAudioFocusChangeListener {
+public class Music_service extends Service implements MediaPlayer.OnErrorListener, MediaPlayer.OnInfoListener, AudioManager.OnAudioFocusChangeListener {
 
 
     private boolean prepared =false;
@@ -33,6 +32,7 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
     private float volumen;
     private boolean conectado=false;
     private boolean muted = false;
+    private AudioManager audioManager = null;
 
     String url = "rtsp://iptv.cybertap.com.ar:1935/fmvida/fmvida.stream";
     //String url = "http://72.13.93.91:80";
@@ -54,12 +54,13 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
         Log.i("Service", "Service onStartCommand ");
 
 
-        AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         int result = audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
                 AudioManager.AUDIOFOCUS_GAIN);
 
         if (result != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-            // could not get audio focus.
+
+            Log.i("Service", "could not get audio focus. ");
         }
 
         NotificationCompat.Builder mBuilder =
@@ -96,28 +97,30 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
             Log.i("Service", "Registrado mConnReceiver");
         }
         else if(intent.getAction().equals((MainActivity.ACTION_STOP))){
-            if(mediaPlayer!=null){
+            Log.i("Service", "MediaPlayer empe<zando el stop " );
+            if(this.mediaPlayer!=null){
                 stopMediaPlayer();
+
             }
-            Log.i("Service", "MediaPlayer stop " + mediaPlayer.isPlaying());
+            Log.i("Service", "MediaPlayer stop " + this.mediaPlayer.isPlaying());
         }
         else if(intent.getAction().equals((MainActivity.MUTE))){
-            if(mediaPlayer!=null) {
-                mediaPlayer.setVolume(0f, 0f);
+            if(this.mediaPlayer!=null) {
+                this.mediaPlayer.setVolume(0f, 0f);
                 this.muted = true;
             }
         }
         else if(intent.getAction().equals((MainActivity.UNMUTE))){
-            if(mediaPlayer!=null) {
-                mediaPlayer.setVolume(intent.getFloatExtra("lastVolume", 0.7f), intent.getFloatExtra("lastVolume", 0.7f));
-                volumen = intent.getFloatExtra("lastVolume", 0.7f);
+            if(this.mediaPlayer!=null) {
+                this.mediaPlayer.setVolume(intent.getFloatExtra("vol", 0.7f), intent.getFloatExtra("vol", 0.7f));
+                volumen = intent.getFloatExtra("vol", 0.7f);
                 this.muted=false;
             }
         }
         else if(intent.getAction().equals((MainActivity.VOLUME_CHANGE))){
-            if(mediaPlayer!=null) {
-                mediaPlayer.setVolume(intent.getFloatExtra("vol", 0.7f), intent.getFloatExtra("vol", 0.7f));
-                volumen = intent.getFloatExtra("lastVolume", 0.7f);
+            if(this.mediaPlayer!=null) {
+                this.mediaPlayer.setVolume(intent.getFloatExtra("vol", 0.7f), intent.getFloatExtra("vol", 0.7f));
+                volumen = intent.getFloatExtra("vol", 0.7f);
             }
         }
         return Service.START_NOT_STICKY;
@@ -132,7 +135,7 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
             if (auto_reconnect && conectado == false) {
                 Log.i("Service", "esta conectado " + intent.getStringExtra("extraInfo") + " mas datos: " + intent.getParcelableExtra("otherNetwork"));
                 conectado=true;
-                mediaPlayer.reset();
+                this.mediaPlayer.reset();
                 initMediaPlayer(volumen);
             }
         } else if (netInfo != null && !netInfo.isConnected() && !netInfo.isConnectedOrConnecting()) {
@@ -163,20 +166,28 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
    public void initMediaPlayer(final Float init_volume) {
         Log.i("Service", "Init Player ");
         sendToActivity(MainActivity.STATUS_CONNECTING);
-        this.mediaPlayer = new MediaPlayer();
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        mediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
+       if (this.mediaPlayer != null){
+           this.mediaPlayer.release();
+           this.mediaPlayer = null;
+       }
+       this.mediaPlayer = new MediaPlayer();
+        this.mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        this.mediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
         this.wifiLock = ((WifiManager) getSystemService(Context.WIFI_SERVICE))
                 .createWifiLock(WifiManager.WIFI_MODE_FULL, "mylock");
         this.wifiLock.acquire();
         try {
-            mediaPlayer.setDataSource(url);
+            this.mediaPlayer.setDataSource(url);
         } catch (IOException e) {
             Log.i("Service", "error en el setdatasrouce " + e.getMessage() + e.getLocalizedMessage());
         }
-        mediaPlayer.prepareAsync();
+
+
+
+        this.mediaPlayer.prepareAsync();
+
        Log.i("Service", "Iniciado Player ");
-        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+        this.mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mediaPlayer) {
                 Log.i("Service", "Preparado con volumen: " + init_volume);
@@ -188,47 +199,46 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
                 }
             }
         });
-        mediaPlayer.setOnErrorListener(this);
-        mediaPlayer.setOnInfoListener(new MediaPlayer.OnInfoListener() {
-            @Override
-            public boolean onInfo(MediaPlayer mediaPlayer, int what, int extra) {
-                return false;
-            }
-        });
+        this.mediaPlayer.setOnErrorListener(this);
+        this.mediaPlayer.setOnInfoListener(this);
+
     }
 
     public void stopMediaPlayer() {
-        if (prepared==true) {
-            sendToActivity(MainActivity.STATUS_STOP);
+        if (prepared == true) {
             Log.i("Service", "STATUS_STOP sended");
-            mediaPlayer.stop();
 
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
 
-            prepared=false;
-            stopSelf();
-        } else {
+                    if (mediaPlayer != null) {
+                        mediaPlayer.stop();
+                    }
+                }
+                }).start();
+
             sendToActivity(MainActivity.STATUS_STOP);
-            Log.i("Service", "STATUS_PREPARE CANCEL");
 
-            mediaPlayer.reset();
+            prepared = false;
             stopSelf();
+
         }
-        }
+    }
 
     public void onAudioFocusChange(int focusChange) {
         switch (focusChange) {
             case AudioManager.AUDIOFOCUS_GAIN:
                 Log.i("Service", "Audio Focus GAIN");
                 try {
-                    if (mediaPlayer != null && prepared && !muted) {
+                    if (this.mediaPlayer != null && prepared && !muted) {
 
-                        mediaPlayer.setVolume(volumen, volumen);
+                        this.mediaPlayer.setVolume(volumen, volumen);
                         Log.i("Service", "seteado volumen");
                     }
                 } catch (Exception e) {
                     Log.i("Service", "error: " + e.getMessage());
                 }
-
 
                 break;
 
@@ -243,37 +253,43 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
                 Log.i("Service", "Audio Focus TRANSIENT");
                 if (prepared==true) {
 
-                    mediaPlayer.setVolume(0f, 0f);
+                    this.mediaPlayer.setVolume(0f, 0f);
                 }
                 break;
 
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
                 Log.i("Service", "Audio Focus Duck");
                 if (prepared  && !muted ) {
-                    mediaPlayer.setVolume(0.1f, 0.1f);
+                    this.mediaPlayer.setVolume(0.1f, 0.1f);
                 }
                 break;
         }
     }
 
     @Override
+    public boolean onInfo(MediaPlayer mp, int what, int extra) {
+        if (what == 701 && prepared == true) {
+            Toast.makeText(getApplicationContext(), "Buffering...",
+                    Toast.LENGTH_SHORT).show();
+        }
+        return false;
+    }
+    @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
         Log.i("Service", "Error: " + what + " Extra: " + extra);
-        mediaPlayer.reset();
+        if (what == 1 && extra == -2147483648) {
+            Toast.makeText(getApplicationContext(), "Sin conexion con streaming",
+                    Toast.LENGTH_LONG).show();
+        }
+        else {
+            Toast.makeText(getApplicationContext(), "Error: " + what + " " + extra,
+                    Toast.LENGTH_LONG).show();
+        }
+        this.mediaPlayer.reset();
+
         sendToActivity((MainActivity.STATUS_STOP));
         prepared=false;
-
-        if (what == 100 || what == -110) {
-            new CountDownTimer(30000, 1000) {
-                public void onTick(long millisUntilFinished) {
-                }
-                public void onFinish() {
-                    initMediaPlayer(10f);
-                    sendToActivity((MainActivity.STATUS_LOST_STREAM));
-                }
-            }.start();
-        }
-        return true;
+       return false;
     }
 
 
@@ -281,10 +297,15 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
     public void onDestroy() {
         super.onDestroy();
         Log.i("Service", "Service On destroy ");
-        unregisterReceiver(mConnReceiver);
+        if (audioManager != null) {
+            audioManager.abandonAudioFocus(this);
+        }
+        if (mConnReceiver != null) {
+            unregisterReceiver(mConnReceiver);
+        }
         wifiLock.release();
-        mediaPlayer.stop();
-        mediaPlayer.release();
-        //mediaPlayer = null;
+        this.mediaPlayer.stop();
+        this.mediaPlayer.release();
+        //this.mediaPlayer = null;
     }
 }

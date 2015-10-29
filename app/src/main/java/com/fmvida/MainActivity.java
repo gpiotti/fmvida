@@ -2,6 +2,8 @@ package com.fmvida;
 
 import android.content.BroadcastReceiver;
 import android.content.IntentFilter;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.content.Context;
 import android.content.Intent;
@@ -21,8 +23,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.google.android.gms.analytics.GoogleAnalytics;
+
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
@@ -54,7 +57,16 @@ public class MainActivity extends AppCompatActivity {
     public static final String UNMUTE = "com.fmvida.action.UNMUTE";
 
     public static final String FACEBOOK_URL = "https://www.facebook.com/juancruz.rubino.12";
+    public static final String FACEBOOK_ID = "fb://profile/100005868240617";
     public static final String TWITTER_URL = "https://twitter.com/fmvida1035";
+    public static final String TWITTER_ID = "twitter://user?user_id=1395651954";
+    public static final String INSTAGRAM_URL = "https://instagram.com/Fmvida103.5";
+    public static final String INSTAGRAM_ID = "http://instagram.com/_u/Fmvida103.5";
+
+
+
+
+    public static final String WHATSAPP_NUMBER = "+5492281572830";
 
     private String player_status = STATUS_STOP;
     boolean muted = false;
@@ -97,19 +109,19 @@ public class MainActivity extends AppCompatActivity {
         volumeControl.setEnabled(false);
         volumeControl.setMax(maxVolume);
         Log.i("MyActivity", "Max Volumen : " + maxVolume);
-        volumeControl.setProgress((int)Math.round( maxVolume * 0.6));
+        volumeControl.setProgress((int) Math.round(maxVolume * 0.6));
         playStopButton.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
                 if (player_status == STATUS_PLAYING) {
                     player_status = STATUS_STOP;
                     startService(new Intent(getApplicationContext(), Music_service.class).setAction(ACTION_STOP));
-                    muted=false;
+                    muted = false;
                     muteButton.setImageResource(R.drawable.ic_volume_up_black_36dp);
                     playStopButton.setImageResource(R.drawable.ic_play_arrow_white_48dp);
                 } else if (player_status == STATUS_STOP) {
                     startService(new Intent(getApplicationContext(), Music_service.class).setAction(ACTION_START).putExtra("vol", calcularVolumen()));
-                    Log.i("MyActivity", "Arrancando con volumen : "+ calcularVolumen());
+                    Log.i("MyActivity", "Arrancando con volumen : " + calcularVolumen());
                     playStopButton.setImageResource(R.drawable.ic_stop_white_48dp);
                     player_status = STATUS_PLAYING;
                 }
@@ -145,8 +157,7 @@ public class MainActivity extends AppCompatActivity {
                 if (player_status == STATUS_PLAYING || player_status == STATUS_CONNECTING) {
                     startService(new Intent(getApplicationContext(), Music_service.class).setAction(ACTION_STOP));
                     finish();
-                }
-                else{
+                } else {
                     finish();
                 }
 
@@ -165,23 +176,30 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onProgressChanged(SeekBar arg0, int progress, boolean arg2) {
-                    if (!muted) {
-                        Log.i("MyActivity", "Progress " + progress);
-                        Intent serviceIntent = new Intent(getApplicationContext(), Music_service.class);
-                        serviceIntent.setAction(VOLUME_CHANGE);
-                        serviceIntent.putExtra("vol", calcularVolumen());
-                        startService(serviceIntent);
-                    }
+                if (!muted) {
+                    Log.i("MyActivity", "Progress " + progress);
+                    Intent serviceIntent = new Intent(getApplicationContext(), Music_service.class);
+                    serviceIntent.setAction(VOLUME_CHANGE);
+                    serviceIntent.putExtra("vol", calcularVolumen());
+                    startService(serviceIntent);
+                }
             }
         });
 
         ImageView imgFacebook = (ImageView)findViewById(R.id.facebook);
         imgFacebook.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_VIEW);
-                intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                intent.setData(Uri.parse(FACEBOOK_URL));
+
+                PackageManager pm = getPackageManager();
+                try {
+                    Intent faceIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(FACEBOOK_ID));
+                    pm.getPackageInfo("com.facebook.katana", PackageManager.GET_META_DATA);
+                    startActivity(faceIntent);
+
+                } catch (Exception e) {
+                    Intent faceIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(FACEBOOK_URL));
+                    startActivity(faceIntent);
+                }
 
                 // Build and send an Event.
                 t.send(new HitBuilders.EventBuilder()
@@ -189,26 +207,90 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Click")
                         .setLabel("Social")
                         .build());
-                startActivity(intent);
+
             }
         });
 
         ImageView imgTwitter = (ImageView)findViewById(R.id.twitter);
         imgTwitter.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_VIEW);
-                intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                intent.setData(Uri.parse(TWITTER_URL));
+
+                PackageManager pm=getPackageManager();
+                try {
+                    // get the Twitter app if possible
+                    pm.getPackageInfo("com.twitter.android", 0);
+                    Intent twitterIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(TWITTER_ID));
+                    startActivity(twitterIntent);
+                } catch (Exception e) {
+                    // no Twitter app, revert to browser
+                    Intent twitterIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(TWITTER_URL));
+                    startActivity(twitterIntent);
+                }
+
                 // Build and send an Event.
                 t.send(new HitBuilders.EventBuilder()
                         .setCategory("Twitter")
                         .setAction("Click")
                         .setLabel("Social")
                         .build());
-                startActivity(intent);
+
             }
         });
+
+        ImageView imgWhatsapp = (ImageView)findViewById(R.id.whatsapp);
+        imgWhatsapp.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Uri uri = Uri.parse("smsto:" + WHATSAPP_NUMBER);
+
+                PackageManager pm=getPackageManager();
+                try {
+                    Intent waIntent = new Intent(Intent.ACTION_SENDTO, uri);
+                    pm.getPackageInfo("com.whatsapp", PackageManager.GET_META_DATA);
+                    waIntent.setPackage("com.whatsapp");
+                    startActivity(waIntent);
+                } catch (PackageManager.NameNotFoundException e) {
+                    Toast.makeText(getApplicationContext(), "WhatsApp no instalado", Toast.LENGTH_SHORT)
+                            .show();
+                }
+
+                // Build and send an Event.
+                t.send(new HitBuilders.EventBuilder()
+                        .setCategory("Whatsapp")
+                        .setAction("Click")
+                        .setLabel("Social")
+                        .build());
+
+            }
+        });
+
+
+        ImageView imgInstagram = (ImageView)findViewById(R.id.instagram);
+        imgInstagram.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+
+                PackageManager pm=getPackageManager();
+                try {
+                    // get the Twitter app if possible
+                    pm.getPackageInfo("com.instagram.android", 0);
+                    Intent instagramIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(INSTAGRAM_ID));
+                    startActivity(instagramIntent);
+                } catch (Exception e) {
+                    // no Twitter app, revert to browser
+                    Intent twitterIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(INSTAGRAM_URL));
+                    startActivity(twitterIntent);
+                }
+
+                // Build and send an Event.
+                t.send(new HitBuilders.EventBuilder()
+                        .setCategory("Instagram")
+                        .setAction("Click")
+                        .setLabel("Social")
+                        .build());
+
+            }
+        });
+
+
 
         if (savedInstanceState != null) {
             Log.i("MyActivity", "Activity On Saveed ");
@@ -247,27 +329,31 @@ public class MainActivity extends AppCompatActivity {
     private void updateUI(String command){
         switch(command) {
             case  STATUS_CONNECTING:
+                Log.i("MyActivity", "UPDATE UI CONNECTINGH ");
                 connectingText.setVisibility(View.VISIBLE);
                 connectingText.startAnimation(reconnectBlink);
-                connectingText.setVisibility(View.VISIBLE);
+                playStopButton.setEnabled(false);
+                playStopButton.setAlpha(64);
                 muteButton.setEnabled(false);
                 muteButton.setAlpha(64);
                 volumeControl.setEnabled(false);
 
                 break;
             case  STATUS_PLAYING:
+                Log.i("MyActivity", "UPDATE UI PLAYING ");
                 connectingText.clearAnimation();
-                connectingText.setVisibility(View.INVISIBLE);
                 connectingText.setVisibility(View.INVISIBLE);
                 muteButton.setEnabled(true);
                 muteButton.setAlpha(255);
                 volumeControl.setEnabled(true);
+                playStopButton.setEnabled(true);
+                playStopButton.setAlpha(255);
 
                 break;
             case STATUS_LOST_STREAM:
+                Log.i("MyActivity", "UPDATE UI LOST STREAM ");
                 connectingText.setVisibility(View.VISIBLE);
                 connectingText.startAnimation(reconnectBlink);
-                connectingText.setVisibility(View.VISIBLE);
                 muteButton.setEnabled(false);
                 muteButton.setAlpha(64);
                 volumeControl.setEnabled(false);
@@ -278,12 +364,13 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("MyActivity", "UPDATE UI STOP ");
                 connectingText.clearAnimation();
                 connectingText.setVisibility(View.INVISIBLE);
-                connectingText.setVisibility(View.INVISIBLE);
                 muteButton.setEnabled(false);
                 muteButton.setAlpha(64);
                 player_status = STATUS_STOP;
                 playStopButton.setImageResource(R.drawable.ic_play_arrow_white_48dp);
                 volumeControl.setEnabled(false);
+                playStopButton.setEnabled(true);
+                playStopButton.setAlpha(255);
 
                 break;
         }

@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     AudioManager audioManager;
 
     //Buttons y UI
-    //ImageButton reconectButton;
+
     ImageButton powerButton;
     ImageButton muteButton;
     ImageButton playStopButton;
@@ -113,17 +113,21 @@ public class MainActivity extends AppCompatActivity {
         playStopButton.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
-                if (player_status == STATUS_PLAYING) {
+                Log.i("MyActivity", "player_status = " + player_status);
+                if (player_status.equals(STATUS_PLAYING)) {
                     player_status = STATUS_STOP;
                     startService(new Intent(getApplicationContext(), Music_service.class).setAction(ACTION_STOP));
                     muted = false;
                     muteButton.setImageResource(R.drawable.ic_volume_up_black_36dp);
                     playStopButton.setImageResource(R.drawable.ic_play_arrow_white_48dp);
-                } else if (player_status == STATUS_STOP) {
+                } else if (player_status.equals(STATUS_STOP)) {
                     startService(new Intent(getApplicationContext(), Music_service.class).setAction(ACTION_START).putExtra("vol", calcularVolumen()));
                     Log.i("MyActivity", "Arrancando con volumen : " + calcularVolumen());
                     playStopButton.setImageResource(R.drawable.ic_stop_white_48dp);
                     player_status = STATUS_PLAYING;
+                }
+                else{
+                    Log.i("MyActivity", "entro en el else " + player_status);
                 }
             }
         });

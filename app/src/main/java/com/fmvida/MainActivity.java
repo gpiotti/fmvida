@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String STATUS_PLAYING = "com.fmvida..action.STATUS_PLAYING";
     public static final String STATUS_STOP = "com.fmvida.action.STATUS_STOP";
+    public static final String STATUS_STOPPING = "com.fmvida.action.STATUS_STOPPING";
     public static final String STATUS_CONNECTING = "com.fmvida.action.STATUS_CONNECTING";
     public static final String STATUS_LOST_STREAM = "com.fmvida.action.SATUS_LOST_STREAM";
 
@@ -336,6 +337,16 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("MyActivity", "UPDATE UI CONNECTINGH ");
                 connectingText.setVisibility(View.VISIBLE);
                 connectingText.startAnimation(reconnectBlink);
+                playStopButton.setEnabled(false);
+                playStopButton.setAlpha(64);
+                muteButton.setEnabled(false);
+                muteButton.setAlpha(64);
+                volumeControl.setEnabled(false);
+
+                break;
+            case  STATUS_STOPPING:
+                Log.i("MyActivity", "UPDATE UI CONNECTINGH ");
+                connectingText.setVisibility(View.INVISIBLE);
                 playStopButton.setEnabled(false);
                 playStopButton.setAlpha(64);
                 muteButton.setEnabled(false);

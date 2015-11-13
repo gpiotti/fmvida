@@ -196,19 +196,11 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
     public void stopMediaPlayer() {
         if (prepared == true) {
             Log.i("Service", "STATUS_STOP sended");
-            sendToActivity(MainActivity.STATUS_STOP);
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    if (mediaPlayer != null) {
-                        mediaPlayer.stop();
-                    }
-                    prepared = false;
-                    stopSelf();
-                }
-            }).start();
+            new StopAsync().execute();
+
         }
     }
+
 
     public void onAudioFocusChange(int focusChange) {
         switch (focusChange) {
@@ -323,15 +315,21 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
     private class StopAsync extends AsyncTask<Void, Void, Integer> {
         @Override
         protected Integer doInBackground(Void... params) {
-            return null;
+            if (mediaPlayer != null) {
+                mediaPlayer.stop();
+            }
+            prepared = false;
+            stopSelf();
+
+            return 0;
         }
 
-        protected void onPreExecute(Integer result) {
-            sendToActivity(MainActivity.STATUS_CONNECTING);
+        protected void onPreExecute() {
+            sendToActivity(MainActivity.STATUS_STOPPING);
         }
 
         protected void onPostExecute(Integer result) {
-
+            sendToActivity(MainActivity.STATUS_STOP);
         }
 
     }

@@ -399,6 +399,9 @@ public class MainActivity extends AppCompatActivity {
                 case STATUS_CONNECTING:   updateUI(STATUS_CONNECTING);
                     Log.i("MyActivity", "STATUS_CONNECTING ");
                 break;
+                case STATUS_STOPPING:   updateUI(STATUS_STOPPING);
+                    Log.i("MyActivity", "STATUS_STOPPING ");
+                    break;
                 case STATUS_PLAYING:   updateUI(STATUS_PLAYING);
                     Log.i("MyActivity", "STATUS_PLAYING ");
                 break;

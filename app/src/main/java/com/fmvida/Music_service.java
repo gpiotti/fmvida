@@ -11,6 +11,7 @@ import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
@@ -38,7 +39,6 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
 
     @Override
     public IBinder onBind(Intent arg0) {
-        // TODO Auto-generated method stub
         Log.i("Service", "Service Bind ");
         return null;
     }
@@ -83,17 +83,8 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
         // mId allows you to update the notification later on.
 
         if (intent.getAction().equals(MainActivity.ACTION_START)) {
-            volumen = intent.getFloatExtra("vol", 0.7f);
             startForeground(mId, mBuilder.build());
-            initMediaPlayer(volumen);
-            Log.i("Service", "Iniciando mediaPlayer " + volumen);
-            auto_reconnect = true;
-            IntentFilter intentFilter = new IntentFilter();
-            intentFilter.addAction("android.net.wifi.WIFI_STATE_CHANGED");
-            intentFilter.addAction("android.net.wifi.CONNECTIVITY_ACTION");
-            intentFilter.addAction("android.net.wifi.STATE_CHANGE");
-            registerReceiver(mConnReceiver, new IntentFilter(intentFilter));
-            Log.i("Service", "Registrado mConnReceiver");
+            new StartAsync().execute(intent);
         }
         else if(intent.getAction().equals((MainActivity.ACTION_STOP))){
             Log.i("Service", "MediaPlayer empe<zando el stop " );
@@ -164,7 +155,6 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
 
    public void initMediaPlayer(final Float init_volume) {
         Log.i("Service", "Init Player ");
-        sendToActivity(MainActivity.STATUS_CONNECTING);
        if (this.mediaPlayer != null){
            this.mediaPlayer.release();
            this.mediaPlayer = null;
@@ -206,19 +196,17 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
     public void stopMediaPlayer() {
         if (prepared == true) {
             Log.i("Service", "STATUS_STOP sended");
-
+            sendToActivity(MainActivity.STATUS_STOP);
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     if (mediaPlayer != null) {
                         mediaPlayer.stop();
                     }
-                    sendToActivity(MainActivity.STATUS_STOP);
+                    prepared = false;
+                    stopSelf();
                 }
             }).start();
-
-            prepared = false;
-            stopSelf();
         }
     }
 
@@ -303,5 +291,47 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
         this.mediaPlayer.stop();
         this.mediaPlayer.release();
         //this.mediaPlayer = null;
+    }
+
+    private class StartAsync extends AsyncTask<Intent, Void, Integer> {
+        @Override
+        protected Integer doInBackground(Intent... intents) {
+            volumen = intents[0].getFloatExtra("vol", 0.7f);
+            initMediaPlayer(volumen);
+            Log.i("Service", "Iniciando mediaPlayer " + volumen);
+            auto_reconnect = true;
+            IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction("android.net.wifi.WIFI_STATE_CHANGED");
+            intentFilter.addAction("android.net.wifi.CONNECTIVITY_ACTION");
+            intentFilter.addAction("android.net.wifi.STATE_CHANGE");
+            registerReceiver(mConnReceiver, new IntentFilter(intentFilter));
+            Log.i("Service", "Registrado mConnReceiver");
+            return 0;
+        }
+
+        protected void onPreExecute() {
+            sendToActivity(MainActivity.STATUS_CONNECTING);
+        }
+
+        protected void onPostExecute(Integer result) {
+
+        }
+
+    }
+
+    private class StopAsync extends AsyncTask<Void, Void, Integer> {
+        @Override
+        protected Integer doInBackground(Void... params) {
+            return null;
+        }
+
+        protected void onPreExecute(Integer result) {
+            sendToActivity(MainActivity.STATUS_CONNECTING);
+        }
+
+        protected void onPostExecute(Integer result) {
+
+        }
+
     }
 }

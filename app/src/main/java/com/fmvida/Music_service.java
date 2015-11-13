@@ -101,7 +101,7 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
                 stopMediaPlayer();
 
             }
-            Log.i("Service", "MediaPlayer stop " + this.mediaPlayer.isPlaying());
+            Log.i("Service", "MediaPlayer stop " );
         }
         else if(intent.getAction().equals((MainActivity.MUTE))){
             if(this.mediaPlayer!=null) {

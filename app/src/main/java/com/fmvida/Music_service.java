@@ -289,6 +289,7 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
         }
         wifiLock.release();
         this.mediaPlayer.stop();
+        this.mediaPlayer.reset();
         this.mediaPlayer.release();
         //this.mediaPlayer = null;
     }

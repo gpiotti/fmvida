@@ -21,7 +21,6 @@ import android.widget.Toast;
 import java.io.IOException;
 
 
-
 public class Music_service extends Service implements MediaPlayer.OnErrorListener, MediaPlayer.OnInfoListener, AudioManager.OnAudioFocusChangeListener {
 
 
@@ -176,32 +175,32 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
         this.wifiLock = ((WifiManager) getSystemService(Context.WIFI_SERVICE))
                 .createWifiLock(WifiManager.WIFI_MODE_FULL, "mylock");
         this.wifiLock.acquire();
-        try {
-            this.mediaPlayer.setDataSource(url);
-        } catch (IOException e) {
-            Log.i("Service", "error en el setdatasrouce " + e.getMessage() + e.getLocalizedMessage());
-        }
 
-
-
-        this.mediaPlayer.prepareAsync();
+       this.mediaPlayer.setOnErrorListener(this);
+       this.mediaPlayer.setOnInfoListener(this);
 
        Log.i("Service", "Iniciado Player ");
-        this.mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mediaPlayer) {
-                Log.i("Service", "Preparado con volumen: " + init_volume);
-                mediaPlayer.setVolume(init_volume, init_volume);
-                if (auto_reconnect) {
-                    mediaPlayer.start();
-                    sendToActivity(MainActivity.STATUS_PLAYING);
-                    prepared = true;
-                }
-            }
-        });
-        this.mediaPlayer.setOnErrorListener(this);
-        this.mediaPlayer.setOnInfoListener(this);
+       this.mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+           @Override
+           public void onPrepared(MediaPlayer mediaPlayer) {
+               Log.i("Service", "Preparado con volumen: " + init_volume);
+               mediaPlayer.setVolume(init_volume, init_volume);
+               if (auto_reconnect) {
+                   mediaPlayer.start();
+                   sendToActivity(MainActivity.STATUS_PLAYING);
+                   prepared = true;
+               }
+           }
+       });
 
+       try {
+           this.mediaPlayer.setDataSource(url);
+           this.mediaPlayer.prepareAsync();
+       } catch (IOException e) {
+           Log.i("Service", "error en el setdatasrouce " + e.getMessage() + e.getLocalizedMessage());
+           this.mediaPlayer.reset();
+           sendToActivity((MainActivity.STATUS_STOP));
+       }
     }
 
     public void stopMediaPlayer() {
@@ -211,18 +210,15 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-
                     if (mediaPlayer != null) {
                         mediaPlayer.stop();
                     }
+                    sendToActivity(MainActivity.STATUS_STOP);
                 }
-                }).start();
-
-            sendToActivity(MainActivity.STATUS_STOP);
+            }).start();
 
             prepared = false;
             stopSelf();
-
         }
     }
 

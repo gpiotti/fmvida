@@ -125,8 +125,8 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
             if (auto_reconnect && conectado == false) {
                 Log.i("Service", "esta conectado " + intent.getStringExtra("extraInfo") + " mas datos: " + intent.getParcelableExtra("otherNetwork"));
                 conectado=true;
-                this.mediaPlayer.reset();
-                initMediaPlayer(volumen);
+                             
+                new StartAsync().execute(intent);
             }
         } else if (netInfo != null && !netInfo.isConnected() && !netInfo.isConnectedOrConnecting()) {
             if (prepared == true) {
@@ -156,8 +156,10 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
    public void initMediaPlayer(final Float init_volume) {
         Log.i("Service", "Init Player ");
        if (this.mediaPlayer != null){
+           this.mediaPlayer.reset();
            this.mediaPlayer.release();
            this.mediaPlayer = null;
+           Log.i("Service", "entro release ");
        }
        this.mediaPlayer = new MediaPlayer();
         this.mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);

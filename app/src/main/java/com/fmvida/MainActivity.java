@@ -345,7 +345,7 @@ public class MainActivity extends AppCompatActivity {
 
                 break;
             case  STATUS_STOPPING:
-                Log.i("MyActivity", "UPDATE UI CONNECTINGH ");
+                Log.i("MyActivity", "UPDATE UI STOPPINg ");
                 connectingText.setVisibility(View.INVISIBLE);
                 playStopButton.setEnabled(false);
                 playStopButton.setAlpha(64);

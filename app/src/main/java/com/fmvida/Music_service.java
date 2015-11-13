@@ -84,6 +84,15 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
 
         if (intent.getAction().equals(MainActivity.ACTION_START)) {
             startForeground(mId, mBuilder.build());
+
+            IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction("android.net.wifi.WIFI_STATE_CHANGED");
+            intentFilter.addAction("android.net.wifi.CONNECTIVITY_ACTION");
+            intentFilter.addAction("android.net.wifi.STATE_CHANGE");
+            registerReceiver(mConnReceiver, new IntentFilter(intentFilter));
+            Log.i("Service", "Registrado mConnReceiver");
+
+
             new StartAsync().execute(intent);
         }
         else if(intent.getAction().equals((MainActivity.ACTION_STOP))){
@@ -295,12 +304,7 @@ public class Music_service extends Service implements MediaPlayer.OnErrorListene
             initMediaPlayer(volumen);
             Log.i("Service", "Iniciando mediaPlayer " + volumen);
             auto_reconnect = true;
-            IntentFilter intentFilter = new IntentFilter();
-            intentFilter.addAction("android.net.wifi.WIFI_STATE_CHANGED");
-            intentFilter.addAction("android.net.wifi.CONNECTIVITY_ACTION");
-            intentFilter.addAction("android.net.wifi.STATE_CHANGE");
-            registerReceiver(mConnReceiver, new IntentFilter(intentFilter));
-            Log.i("Service", "Registrado mConnReceiver");
+
             return 0;
         }
 

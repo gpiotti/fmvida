@@ -189,8 +189,6 @@
                 android:src="@drawable/ic_chrome_reader_mode_black_24dp"
                 android:layout_alignParentBottom="true"
                 android:onClick="showProg" />
-
-
         </RelativeLayout>
 
     </LinearLayout>

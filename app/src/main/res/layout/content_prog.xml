@@ -26,30 +26,31 @@
             <TableRow  >
                 <TableLayout android:padding="8dp">
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:text="Folklore en el 103"
-                        android:textSize="18dp"
-                        android:paddingBottom="5dp"
-                        android:textColor="#ef4b4d"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16dp"
+                        android:padding="4dp"
+                        android:textColor="#ffffff"
                         android:layout_marginTop="5dp"
-                        android:background="@drawable/borderbottom">
+                        android:background="@drawable/borderbottom"
+                        android:autoText="false">
                     </TextView>
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:text="Lun a Vie de 7hs a 9hs"
-                        android:textSize="13dp"
-                        android:layout_marginTop="10dp"
-                        android:textColor="@android:color/white">
-                    </TextView>
-                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textSize="13dp"
+                        android:layout_marginTop="5dp"
+                        android:textColor="#DCD3D3">
+                    </TextView>
+                    <TextView
                         android:text="Comenzamos el día con una buena programación de folklore."
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:textSize="11dp"
                         android:layout_marginTop="5dp"
-                        android:textColor="#ffffff">
+                        android:textColor="#DCD3D3">
                     </TextView>
                 </TableLayout>
 
@@ -58,30 +59,31 @@
             <TableRow  >
                 <TableLayout android:padding="8dp">
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:text="Mañanas casi normales"
-                        android:textSize="18dp"
-                        android:paddingBottom="5dp"
-                        android:textColor="#ef4b4d"
-                        android:layout_marginTop="5dp"
-                        android:background="@drawable/borderbottom">
-                    </TextView>
-                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Lun a Vie de 9:30hs a 13hs"
-                        android:textSize="13dp"
-                        android:layout_marginTop="10dp"
-                        android:textColor="@android:color/white">
+                        android:textSize="16dp"
+                        android:padding="4dp"
+                        android:textColor="#ffffff"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/borderbottom"
+                        android:autoText="false">
                     </TextView>
                     <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:text="Interés gral. Info de la ciudad, de la región el país y el mundo. Entrevistas, consignas, buena música de distintos géneros y por sobre todas las cosas buena onda. Conducción de Tatu Rubino y Sofia Nuñez"
+                        android:text="Lun a Vie de 9:30hs a 13hs"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="13dp"
+                        android:layout_marginTop="5dp"
+                        android:textColor="#DCD3D3">
+                    </TextView>
+                    <TextView
+                        android:text="Interés gral. Info de la ciudad, de la región el país y el mundo. Entrevistas, consignas, buena música de distintos géneros y por sobre todas las cosas buena onda. Conducción de Tatu Rubino y Sofia Nuñez."
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:textSize="11dp"
                         android:layout_marginTop="5dp"
-                        android:textColor="#ffffff">
+                        android:textColor="#DCD3D3">
                     </TextView
 >
                 </TableLayout>
@@ -91,30 +93,31 @@
             <TableRow >
                 <TableLayout android:padding="8dp">
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:text="Honrando al salvador"
-                        android:textSize="18dp"
-                        android:paddingBottom="5dp"
-                        android:textColor="#ef4b4d"
-                        android:layout_marginTop="5dp"
-                        android:background="@drawable/borderbottom">
-                    </TextView>
-                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Lun a Vie de 13hs a 15hs"
-                        android:textSize="13dp"
-                        android:layout_marginTop="10dp"
-                        android:textColor="@android:color/white">
+                        android:textSize="16dp"
+                        android:padding="4dp"
+                        android:textColor="#ffffff"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/borderbottom"
+                        android:autoText="false">
                     </TextView>
                     <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:text="Lun a Vie de 13hs a 15hs"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="13dp"
+                        android:layout_marginTop="5dp"
+                        android:textColor="#DCD3D3">
+                    </TextView>
+                    <TextView
                         android:text="Música realigiosa para jóvenes, rap, regaeton, pop. La conducción de Andres Orona."
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:textSize="11dp"
                         android:layout_marginTop="5dp"
-                        android:textColor="#ffffff">
+                        android:textColor="#DCD3D3">
                     </TextView>
                 </TableLayout>
 
@@ -123,26 +126,31 @@
             <TableRow>
                 <TableLayout android:padding="8dp">
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:text="Expectativas"
-                        android:textSize="18dp"
-                        android:textColor="@android:color/white"
-                        android:background="@drawable/borderbottom">
-                    </TextView>
-                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Lunes a viernes de 15 a 17"
-                        android:textSize="12dp"
-                        android:textColor="@android:color/white">
+                        android:textSize="16dp"
+                        android:padding="4dp"
+                        android:textColor="#ffffff"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/borderbottom"
+                        android:autoText="false">
                     </TextView>
                     <TextView
+                        android:text="Lun a Vie de 15hs a 17hs"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textSize="13dp"
+                        android:layout_marginTop="5dp"
+                        android:textColor="#DCD3D3">
+                    </TextView>
+                    <TextView
                         android:text="La particular compañia de Daniel Adorno, con música alegre, mensaje de positividad, consignas semanales, sorteos y muchas cosas más."
-                        android:textSize="12dp"
-                        android:textColor="@android:color/white">
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="11dp"
+                        android:layout_marginTop="5dp"
+                        android:textColor="#DCD3D3">
                     </TextView>
                 </TableLayout>
 
@@ -151,26 +159,31 @@
             <TableRow>
                 <TableLayout android:padding="8dp">
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:text="Encuentro Deportivo"
-                        android:textSize="18dp"
-                        android:textColor="@android:color/white"
-                        android:background="@drawable/borderbottom">
-                    </TextView>
-                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Lunes y viernes de 19 a 21"
-                        android:textSize="12dp"
-                        android:textColor="@android:color/white">
+                        android:textSize="16dp"
+                        android:padding="4dp"
+                        android:textColor="#ffffff"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/borderbottom"
+                        android:autoText="false">
                     </TextView>
                     <TextView
+                        android:text="Lun y Vie de 19hs a 21hs"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textSize="13dp"
+                        android:layout_marginTop="5dp"
+                        android:textColor="#DCD3D3">
+                    </TextView>
+                    <TextView
                         android:text="El programa de deportes de la ciudad. Desde hace 6 años la actualidad deportiva de la ciudad, difusión de las diferentes disciplinas que se practican en Tapalque, notas en estudios, telefónicas y todas las alternativas que presentan las distintas instituciones. La conducción de Tatu Rubino, Dante Cucuni y la producción perodistica de Aldo Rubino."
-                        android:textSize="12dp"
-                        android:textColor="@android:color/white">
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="11dp"
+                        android:layout_marginTop="5dp"
+                        android:textColor="#DCD3D3">
                     </TextView>
                 </TableLayout>
 
@@ -179,26 +192,31 @@
             <TableRow>
                 <TableLayout android:padding="8dp">
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:text="Te acordas hermano"
-                        android:textSize="18dp"
-                        android:textColor="@android:color/white"
-                        android:background="@drawable/borderbottom">
-                    </TextView>
-                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Martes y jueves de 19 a 21"
-                        android:textSize="12dp"
-                        android:textColor="@android:color/white">
+                        android:textSize="16dp"
+                        android:padding="4dp"
+                        android:textColor="#ffffff"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/borderbottom"
+                        android:autoText="false">
                     </TextView>
                     <TextView
+                        android:text="Mar y Jue de 19hs a 21hs"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textSize="13dp"
+                        android:layout_marginTop="5dp"
+                        android:textColor="#DCD3D3">
+                    </TextView>
+                    <TextView
                         android:text="El programa que llegó para reconocer y homenajear a distintas personas que componen nuestra sociedad en vida. Aldo, Pascual y Garo repasan la vida y los acontecimientos relevantes de vida de los invitados, entre una selección distinguida de tangos."
-                        android:textSize="12dp"
-                        android:textColor="@android:color/white">
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="11dp"
+                        android:layout_marginTop="5dp"
+                        android:textColor="#DCD3D3">
                     </TextView>
                 </TableLayout>
             </TableRow>
@@ -206,26 +224,31 @@
             <TableRow>
                 <TableLayout android:padding="8dp">
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:text="Noche de perros"
-                        android:textSize="18dp"
-                        android:textColor="@android:color/white"
-                        android:background="@drawable/borderbottom">
-                    </TextView>
-                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Lunes a viernes de 21 a 23"
-                        android:textSize="12dp"
-                        android:textColor="@android:color/white">
+                        android:textSize="16dp"
+                        android:padding="4dp"
+                        android:textColor="#ffffff"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/borderbottom"
+                        android:autoText="false">
                     </TextView>
                     <TextView
+                        android:text="Lun a Vie de 21hs a 23hs"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textSize="13dp"
+                        android:layout_marginTop="5dp"
+                        android:textColor="#DCD3D3">
+                    </TextView>
+                    <TextView
                         android:text="Con la conducción de Jose Luis Sotto, solamente buena música!!! Un sello distinguido en la ciudad… este ciclo tiene 26 años de vida."
-                        android:textSize="12dp"
-                        android:textColor="@android:color/white">
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="11dp"
+                        android:layout_marginTop="5dp"
+                        android:textColor="#DCD3D3">
                     </TextView>
                 </TableLayout>
             </TableRow>
@@ -233,26 +256,31 @@
             <TableRow>
                 <TableLayout android:padding="8dp">
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:text="Transmisiones deportivas"
-                        android:textSize="18dp"
-                        android:textColor="@android:color/white"
-                        android:background="@drawable/borderbottom">
-                    </TextView>
-                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Domingos"
-                        android:textSize="12dp"
-                        android:textColor="@android:color/white">
+                        android:textSize="16dp"
+                        android:padding="4dp"
+                        android:textColor="#ffffff"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/borderbottom"
+                        android:autoText="false">
                     </TextView>
                     <TextView
+                        android:text="Domingos de 0hs a 24hs"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textSize="13dp"
+                        android:layout_marginTop="5dp"
+                        android:textColor="#DCD3D3">
+                    </TextView>
+                    <TextView
                         android:text="Los días domingos Fm Vida se viste de futbol, en cada oportunidad que los equipos de la ciudad disputan las fechas de la liga de azul,  está el equipo de encuentro deportivo presente domingo a domingo en los distintos escenarios, saludas en simultaneo describiendo lo que sucede tanto con Atletico como asi también con Sarmiento."
-                        android:textSize="12dp"
-                        android:textColor="@android:color/white">
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="11dp"
+                        android:layout_marginTop="5dp"
+                        android:textColor="#DCD3D3">
                     </TextView>
                 </TableLayout>
             </TableRow>

@@ -186,7 +186,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/imageButton"
-                android:src="@drawable/ic_chrome_reader_mode_black_24dp"
+                android:src="@drawable/ic_chrome_reader_mode_white_48dp"
+                android:background="@null"
                 android:layout_alignParentBottom="true"
                 android:onClick="showProg" />
         </RelativeLayout>

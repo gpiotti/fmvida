@@ -19,6 +19,7 @@ import android.view.View;
 
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     ImageButton powerButton;
     ImageButton muteButton;
     ImageButton playStopButton;
+    Button showButton;
     SeekBar volumeControl;
     Animation reconnectBlink;
     TextView connectingText;
@@ -79,6 +81,8 @@ public class MainActivity extends AppCompatActivity {
         //Get a Tracker (should auto-report)
         final Tracker t = ((AnalyticsApplication) getApplication()).getTracker(AnalyticsApplication.TrackerName.APP_TRACKER);
         // Get tracker.
+
+
 
 
 
@@ -439,8 +443,13 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
     }
+
+    public void showProg(View view) {
+        Intent intent = new Intent(this, progActivity.class);
+        startActivity(intent);
+   }
+
     protected void onRestart() {
         super.onRestart();
         Log.i("MyActivity", "Activity On Restart ");

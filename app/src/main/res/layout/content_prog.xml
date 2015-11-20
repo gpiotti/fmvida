@@ -30,22 +30,26 @@
                         android:layout_height="wrap_content"
                         android:text="Folklore en el 103"
                         android:textSize="18dp"
-                        android:textColor="@android:color/white"
+                        android:paddingBottom="5dp"
+                        android:textColor="#ef4b4d"
+                        android:layout_marginTop="5dp"
                         android:background="@drawable/borderbottom">
                     </TextView>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Lunes a viernes de 7 a 9 ."
-                        android:textSize="12dp"
+                        android:text="Lun a Vie de 7hs a 9hs"
+                        android:textSize="13dp"
+                        android:layout_marginTop="10dp"
                         android:textColor="@android:color/white">
                     </TextView>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Comenzamos el día con una buena programación de folklore."
-                        android:textSize="12dp"
-                        android:textColor="@android:color/white">
+                        android:textSize="11dp"
+                        android:layout_marginTop="5dp"
+                        android:textColor="#ffffff">
                     </TextView>
                 </TableLayout>
 
@@ -58,24 +62,28 @@
                         android:layout_height="wrap_content"
                         android:text="Mañanas casi normales"
                         android:textSize="18dp"
-                        android:textColor="@android:color/white"
+                        android:paddingBottom="5dp"
+                        android:textColor="#ef4b4d"
+                        android:layout_marginTop="5dp"
                         android:background="@drawable/borderbottom">
                     </TextView>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Lunes a viernes de 9:30 a 13"
-                        android:textSize="12dp"
+                        android:text="Lun a Vie de 9:30hs a 13hs"
+                        android:textSize="13dp"
+                        android:layout_marginTop="10dp"
                         android:textColor="@android:color/white">
                     </TextView>
                     <TextView
-
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:text="Interés gral. Info de la ciudad, de la región el país y el mundo. Entrevistas, consignas, buena música de distintos géneros y por sobre todas las cosas buena onda. Conducción de Tatu Rubino y Sofia Nuñez"
-                        android:textSize="12dp"
-                        android:textColor="@android:color/white">
-                    </TextView>
+                        android:textSize="11dp"
+                        android:layout_marginTop="5dp"
+                        android:textColor="#ffffff">
+                    </TextView
+>
                 </TableLayout>
 
             </TableRow>
@@ -87,22 +95,26 @@
                         android:layout_height="wrap_content"
                         android:text="Honrando al salvador"
                         android:textSize="18dp"
-                        android:textColor="@android:color/white"
+                        android:paddingBottom="5dp"
+                        android:textColor="#ef4b4d"
+                        android:layout_marginTop="5dp"
                         android:background="@drawable/borderbottom">
                     </TextView>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Lunes a viernes de 13 a 15"
-                        android:textSize="12dp"
+                        android:text="Lun a Vie de 13hs a 15hs"
+                        android:textSize="13dp"
+                        android:layout_marginTop="10dp"
                         android:textColor="@android:color/white">
                     </TextView>
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:text="Música realigiosa para jóvenes, rap, regaeton, pop. La conducción de Andres Orona."
-                        android:textSize="12dp"
-                        android:textColor="@android:color/white">
+                        android:textSize="11dp"
+                        android:layout_marginTop="5dp"
+                        android:textColor="#ffffff">
                     </TextView>
                 </TableLayout>
 

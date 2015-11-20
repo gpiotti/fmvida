@@ -7,7 +7,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_prog"
     tools:context="com.fmvida.progActivity"
-    android:background="@drawable/back"
+    android:background="@android:color/black"
     >
 
 
@@ -23,7 +23,7 @@
             android:shrinkColumns="*"
             >
 
-            <TableRow>
+            <TableRow  >
                 <TableLayout android:padding="8dp">
                     <TextView
                         android:layout_width="wrap_content"
@@ -51,7 +51,7 @@
 
             </TableRow>
 
-            <TableRow >
+            <TableRow  >
                 <TableLayout android:padding="8dp">
                     <TextView
                         android:layout_width="wrap_content"
@@ -64,7 +64,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Lunes a viernes de 9 y 30 a 13"
+                        android:text="Lunes a viernes de 9:30 a 13"
                         android:textSize="12dp"
                         android:textColor="@android:color/white">
                     </TextView>

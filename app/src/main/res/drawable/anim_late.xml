@@ -5,5 +5,5 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@drawable/late2" android:duration="100"/>
 
-    <item android:drawable="@drawable/late1" android:duration="500" />
+    <item android:drawable="@drawable/late1" android:duration="700" />
 </animation-list>

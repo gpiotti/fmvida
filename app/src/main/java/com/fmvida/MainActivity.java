@@ -2,7 +2,6 @@ package com.fmvida;
 
 import android.content.BroadcastReceiver;
 import android.content.IntentFilter;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.AnimationDrawable;
 import android.support.v4.content.LocalBroadcastManager;
@@ -11,8 +10,8 @@ import android.content.Intent;
 
 import android.media.AudioManager;
 
-
 import android.net.Uri;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,10 +25,6 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -84,9 +79,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Get a Tracker (should auto-report)
-        final Tracker t = ((AnalyticsApplication) getApplication()).getTracker(AnalyticsApplication.TrackerName.APP_TRACKER);
-        // Get tracker.
 
 
         // Load the ImageView that will host the animation and
@@ -225,12 +217,7 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(faceIntent);
                 }
 
-                // Build and send an Event.
-                t.send(new HitBuilders.EventBuilder()
-                        .setCategory("Facebook")
-                        .setAction("Click")
-                        .setLabel("Social")
-                        .build());
+
 
             }
         });
@@ -251,12 +238,7 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(twitterIntent);
                 }
 
-                // Build and send an Event.
-                t.send(new HitBuilders.EventBuilder()
-                        .setCategory("Twitter")
-                        .setAction("Click")
-                        .setLabel("Social")
-                        .build());
+
 
             }
         });
@@ -277,12 +259,6 @@ public class MainActivity extends AppCompatActivity {
                             .show();
                 }
 
-                // Build and send an Event.
-                t.send(new HitBuilders.EventBuilder()
-                        .setCategory("Whatsapp")
-                        .setAction("Click")
-                        .setLabel("Social")
-                        .build());
 
             }
         });
@@ -304,12 +280,7 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(twitterIntent);
                 }
 
-                // Build and send an Event.
-                t.send(new HitBuilders.EventBuilder()
-                        .setCategory("Instagram")
-                        .setAction("Click")
-                        .setLabel("Social")
-                        .build());
+
 
             }
         });
@@ -340,8 +311,7 @@ public class MainActivity extends AppCompatActivity {
 
     protected void onStart(){
         super.onStart();
-        //Get an Analytics tracker to report app starts & uncaught exceptions etc.
-        //GoogleAnalytics.getInstance(this).reportActivityStart(this);
+
         Log.i("MyActivity", "onStart ");
     }
 

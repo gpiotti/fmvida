@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.AnimationDrawable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.content.Context;
 import android.content.Intent;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     SeekBar volumeControl;
     Animation reconnectBlink;
     TextView connectingText;
+    AnimationDrawable  frameAnimation;
 
 
     public static final String STATUS_PLAYING = "com.fmvida..action.STATUS_PLAYING";
@@ -78,10 +80,25 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i("MyActivity", "Activity On Create ");
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
         //Get a Tracker (should auto-report)
         final Tracker t = ((AnalyticsApplication) getApplication()).getTracker(AnalyticsApplication.TrackerName.APP_TRACKER);
         // Get tracker.
 
+
+        // Load the ImageView that will host the animation and
+        // set its background to our AnimationDrawable XML resource.
+        ImageView img = (ImageView)findViewById(R.id.logo);
+
+        //img.setAdjustViewBounds(true);
+        //img.setScaleType(ImageView.ScaleType.FIT_XY);
+        img.setImageDrawable(getResources().getDrawable(R.drawable.anim_late));
+
+        this.frameAnimation = (AnimationDrawable) img.getDrawable();
+        this.frameAnimation.stop();
 
 
 
@@ -90,9 +107,7 @@ public class MainActivity extends AppCompatActivity {
         LocalBroadcastManager.getInstance(this).registerReceiver(
                 mMessageReceiver, new IntentFilter("sendMessage"));
 
-        Log.i("MyActivity", "Activity On Create ");
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+
 
         //reconectButton = (ImageButton) findViewById(R.id.reconnecting);
         connectingText = (TextView) findViewById(R.id.connectingText);
@@ -357,6 +372,10 @@ public class MainActivity extends AppCompatActivity {
                 muteButton.setAlpha(64);
                 volumeControl.setEnabled(false);
 
+                frameAnimation.stop();
+                frameAnimation.selectDrawable(0);
+
+
                 break;
             case  STATUS_PLAYING:
                 Log.i("MyActivity", "UPDATE UI PLAYING ");
@@ -368,6 +387,8 @@ public class MainActivity extends AppCompatActivity {
                 playStopButton.setEnabled(true);
                 playStopButton.setAlpha(255);
 
+                frameAnimation.start();
+
                 break;
             case STATUS_LOST_STREAM:
                 Log.i("MyActivity", "UPDATE UI LOST STREAM ");
@@ -377,6 +398,9 @@ public class MainActivity extends AppCompatActivity {
                 muteButton.setAlpha(64);
                 volumeControl.setEnabled(false);
                 player_status=STATUS_STOP;
+
+                frameAnimation.stop();
+                frameAnimation.selectDrawable(0);
 
                 break;
             case STATUS_STOP:
@@ -391,6 +415,8 @@ public class MainActivity extends AppCompatActivity {
                 playStopButton.setEnabled(true);
                 playStopButton.setAlpha(255);
 
+                frameAnimation.stop();
+                frameAnimation.selectDrawable(0);
                 break;
         }
     }

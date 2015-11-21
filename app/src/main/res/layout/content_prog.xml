@@ -24,13 +24,16 @@
             >
 
             <TableRow  >
-                <TableLayout android:padding="8dp">
+                <TableLayout android:paddingBottom="8dp">
                     <TextView
                         android:text="Folklore en el 103"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="16dp"
-                        android:padding="4dp"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
                         android:textColor="#ffffff"
                         android:layout_marginTop="5dp"
                         android:background="@drawable/borderbottom"
@@ -41,6 +44,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="13dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
                         android:layout_marginTop="5dp"
                         android:textColor="#DCD3D3">
                     </TextView>
@@ -49,6 +54,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="11dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
                         android:layout_marginTop="5dp"
                         android:textColor="#DCD3D3">
                     </TextView>
@@ -57,13 +64,16 @@
             </TableRow>
 
             <TableRow  >
-                <TableLayout android:padding="8dp">
+                <TableLayout android:paddingBottom="8dp">
                     <TextView
                         android:text="Mañanas casi normales"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="16dp"
-                        android:padding="4dp"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
                         android:textColor="#ffffff"
                         android:layout_marginTop="5dp"
                         android:background="@drawable/borderbottom"
@@ -74,6 +84,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="13dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
                         android:layout_marginTop="5dp"
                         android:textColor="#DCD3D3">
                     </TextView>
@@ -82,6 +94,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="11dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
                         android:layout_marginTop="5dp"
                         android:textColor="#DCD3D3">
                     </TextView
@@ -91,13 +105,16 @@
             </TableRow>
 
             <TableRow >
-                <TableLayout android:padding="8dp">
+                <TableLayout android:paddingBottom="8dp">
                     <TextView
                         android:text="Honrando al salvador"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="16dp"
-                        android:padding="4dp"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
                         android:textColor="#ffffff"
                         android:layout_marginTop="5dp"
                         android:background="@drawable/borderbottom"
@@ -108,6 +125,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="13dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
                         android:layout_marginTop="5dp"
                         android:textColor="#DCD3D3">
                     </TextView>
@@ -116,6 +135,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="11dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
                         android:layout_marginTop="5dp"
                         android:textColor="#DCD3D3">
                     </TextView>
@@ -124,13 +145,16 @@
             </TableRow>
 
             <TableRow>
-                <TableLayout android:padding="8dp">
+                <TableLayout android:paddingBottom="8dp">
                     <TextView
                         android:text="Expectativas"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="16dp"
-                        android:padding="4dp"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
                         android:textColor="#ffffff"
                         android:layout_marginTop="5dp"
                         android:background="@drawable/borderbottom"
@@ -141,6 +165,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="13dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
                         android:layout_marginTop="5dp"
                         android:textColor="#DCD3D3">
                     </TextView>
@@ -149,6 +175,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="11dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
                         android:layout_marginTop="5dp"
                         android:textColor="#DCD3D3">
                     </TextView>
@@ -157,13 +185,16 @@
             </TableRow>
 
             <TableRow>
-                <TableLayout android:padding="8dp">
+                <TableLayout android:paddingBottom="8dp">
                     <TextView
                         android:text="Encuentro Deportivo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="16dp"
-                        android:padding="4dp"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
                         android:textColor="#ffffff"
                         android:layout_marginTop="5dp"
                         android:background="@drawable/borderbottom"
@@ -174,6 +205,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="13dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
                         android:layout_marginTop="5dp"
                         android:textColor="#DCD3D3">
                     </TextView>
@@ -182,6 +215,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="11dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
                         android:layout_marginTop="5dp"
                         android:textColor="#DCD3D3">
                     </TextView>
@@ -190,13 +225,16 @@
             </TableRow>
 
             <TableRow>
-                <TableLayout android:padding="8dp">
+                <TableLayout android:paddingBottom="8dp">
                     <TextView
                         android:text="Te acordas hermano"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="16dp"
-                        android:padding="4dp"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
                         android:textColor="#ffffff"
                         android:layout_marginTop="5dp"
                         android:background="@drawable/borderbottom"
@@ -207,6 +245,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="13dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
                         android:layout_marginTop="5dp"
                         android:textColor="#DCD3D3">
                     </TextView>
@@ -215,6 +255,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="11dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
                         android:layout_marginTop="5dp"
                         android:textColor="#DCD3D3">
                     </TextView>
@@ -222,13 +264,16 @@
             </TableRow>
 
             <TableRow>
-                <TableLayout android:padding="8dp">
+                <TableLayout android:paddingBottom="8dp">
                     <TextView
                         android:text="Noche de perros"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="16dp"
-                        android:padding="4dp"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
                         android:textColor="#ffffff"
                         android:layout_marginTop="5dp"
                         android:background="@drawable/borderbottom"
@@ -239,6 +284,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="13dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
                         android:layout_marginTop="5dp"
                         android:textColor="#DCD3D3">
                     </TextView>
@@ -247,6 +294,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="11dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
                         android:layout_marginTop="5dp"
                         android:textColor="#DCD3D3">
                     </TextView>
@@ -254,13 +303,16 @@
             </TableRow>
 
             <TableRow>
-                <TableLayout android:padding="8dp">
+                <TableLayout android:paddingBottom="8dp">
                     <TextView
                         android:text="Transmisiones deportivas"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="16dp"
-                        android:padding="4dp"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
                         android:textColor="#ffffff"
                         android:layout_marginTop="5dp"
                         android:background="@drawable/borderbottom"
@@ -271,6 +323,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="13dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
                         android:layout_marginTop="5dp"
                         android:textColor="#DCD3D3">
                     </TextView>
@@ -279,6 +333,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="11dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
                         android:layout_marginTop="5dp"
                         android:textColor="#DCD3D3">
                     </TextView>
